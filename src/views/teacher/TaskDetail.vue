@@ -6,6 +6,7 @@
       <el-col :span="12"><Pie ref="pie" :pieData = this.pieData></Pie> </el-col>
     </el-row>
     <div>
+      <el-button type="primary" @click="toExcel">导出表格</el-button>
       <el-table
           :data="tableData"
           height="280"
@@ -195,6 +196,31 @@ export default {
     this.groupDetail();
   },
   methods: {
+    toExcel(){
+      axios.get("http://localhost:8181/studentTask/export/", {
+        params: {
+          taskId: this.taskId,
+        },
+        crossDomain: true,
+        responseType: 'blob',
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        const blob = new Blob([resp.data], {type: 'application/vnd.ms-excel'})
+        let filename = 'xxx.xls'
+        // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+        const elink = document.createElement('a')
+        elink.download = filename
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href) // 释放URL 对象
+
+      })
+    },
     newPage(currentPage){
       const _this = this;
       axios.get("http://localhost:8181/studentTask/courseTaskList/", {
