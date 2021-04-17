@@ -27,12 +27,12 @@
         <el-table-column
             prop="studentName"
             label="姓名"
-            width="180">
+            width="120">
         </el-table-column>
         <el-table-column
             prop="className"
             label="班级"
-            width="180">
+            width="120">
         </el-table-column>
         <el-table-column
             prop="account"
@@ -62,14 +62,15 @@
           </el-table-column>
         </el-table-column>
         <el-table-column
-            width="120"
+            width="240"
             fixed="right"
             label="评分">
           <template slot-scope="scope">
             <el-input
                 v-model="marking"
                 size="normal"
-                placeholder="输入分数" style="height: 80%"/>
+                placeholder="输入分数" style="height: 80%;width: 60%"/>
+            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)" style="margin-left: 10%">确定</el-button>
           </template>
         </el-table-column>
         <el-table-column width="240" fixed="right">
@@ -80,7 +81,6 @@
                 placeholder="输入关键字搜索" style="height: 80%"/>
           </template>
           <template slot-scope="scope">
-            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)">编辑</el-button>
             <el-button size="mini" type="primary"  @click="updateStudent(scope.row)">下载作业</el-button>
             <el-button size="mini" @click="openDrawer(scope.row)" type="primary" style="margin-left: 16px;">查看</el-button>
           </template>
@@ -91,7 +91,8 @@
           layout="prev, pager, next"
           :page-size=pageSize
           :total=total
-          @current-change="newPage">
+          @current-change="newPage"
+          style="overflow: auto;float: right;padding-right: 5%;padding-top: 20px">
       </el-pagination>
     </div>
     <div>
@@ -111,17 +112,14 @@
             <p>_(:зゝ∠)_</p>
           </el-drawer>
         </div>
-        <div style="height: 45%">
-
-
-          <el-carousel :interval="4000" type="card" >
+        <div style="height: 45%" v-if="isImgShow">
+          <el-carousel :interval="4000" type="card">
             <el-carousel-item v-for="item in this.imgSrc" :key="item">
               <el-image :src="item" class="image"/>
             </el-carousel-item>
-
           </el-carousel>
           <div>
-            <el-button @click="this.showBigImg">预览</el-button>
+            <el-button @click="this.showBigImg" >预览</el-button>
             <el-image-viewer
                 v-if="showViewer"
                 :on-close="()=>{showViewer=false}"
@@ -153,6 +151,7 @@ export default {
       imgSrc: [],
       showBig: false,
       showBigImgList:[],
+      isImgShow: false,
       isVideoShow: false,
       marking: '',
       pageSize: 6,
@@ -270,6 +269,9 @@ export default {
           this.imgSrc.push(path+item);
         }
       })
+      if(this.imgSrc.length>0){
+        this.isImgShow = true;
+      }
       this.drawer = !this.drawer;
       this.isVideoShow = !this.isVideoShow;
     },

@@ -21,7 +21,7 @@
               v-for="item in options"
               :key="item.value"
               :label="item.teacherName+item.account"
-              :value="item.teacherId">
+              :value="item.account">
           </el-option>
         </el-select>
       </el-form-item>
@@ -38,7 +38,7 @@
               v-for="item in options"
               :key="item.value"
               :label="item.teacherName+item.account"
-              :value="item.teacherId">
+              :value="item.account">
           </el-option>
         </el-select>
       </el-form-item>
@@ -55,7 +55,7 @@
               v-for="item in options"
               :key="item.value"
               :label="item.teacherName+item.account"
-              :value="item.teacherId">
+              :value="item.account">
           </el-option>
         </el-select>
       </el-form-item>
@@ -87,16 +87,15 @@
 <script>
 export default {
   data() {
-    var validateTeacher = (rule,value,callback) =>{
-      if(this.ruleForm.mainTeacherId===this.ruleForm.assistantTeacherOne
-          ||this.ruleForm.mainTeacherId===this.ruleForm.assistantTeacherTwo){
+    let validateTeacher = (rule,value,callback) =>{
+      if(this.ruleForm.mainTeacher===this.ruleForm.assistantTeacherOne
+          ||this.ruleForm.mainTeacher===this.ruleForm.assistantTeacherTwo){
         callback(new Error("主教师不能与助教重复"))
       }else {
         callback()
       }
-
     }
-    var validateAssistant = (rule,value,callback) =>{
+    let validateAssistant = (rule,value,callback) =>{
       if(this.ruleForm.assistantTeacherOne!==''&&this.ruleForm.assistantTeacherTwo!==''){
         if(this.ruleForm.assistantTeacherOne===this.ruleForm.assistantTeacherTwo){
           callback(new Error("助教不能重复"))
@@ -123,7 +122,7 @@ export default {
       ruleForm: {
         courseId: '',
         courseName: '',
-        mainTeacherId: '',
+        mainTeacher: '',
         assistantTeacherOne: '',
         assistantTeacherTwo: '',
         classes: '',

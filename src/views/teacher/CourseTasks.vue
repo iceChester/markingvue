@@ -1,23 +1,37 @@
 <template>
-<div>
-    <el-card class="box-card" v-for="(item,index) in taskFrom">
-      <div slot="header" class="clearfix">
-        <span>作业名称：{{item.title}}</span>
-        <el-button style="float: right; padding: 3px 0" type="text" @click="taskDetail(item.taskId)">详情</el-button>
+<div style="width: 70%;margin: 0 auto">
+    <el-card class="box-card" v-for="(item,index) in taskFrom" style="margin-bottom: 30px">
+      <div >
+        <div slot="header" class="clearfix">
+          <span>作业名称：{{item.title}}</span>
+          <el-button style="float: right; padding: 3px 0" type="text" @click="taskDetail(item.taskId)">详情</el-button>
+        </div>
+        <el-divider></el-divider>
+        <el-row :gutter="20" style="margin-left: 240px;margin-bottom: 20px">
+          <el-col :span="8">
+            <div class="grid-content bg-purple">
+              <span>作业内容： {{item.detail}}</span>
+            </div>
+          </el-col>
+          <el-col :span="10">
+            <div class="grid-content bg-purple">
+              <span>截至日期： {{item.deadline}}</span>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" style="margin-left: 240px">
+          <el-col :span="8">
+            <div class="grid-content bg-purple">
+              <span>作业类型： {{item.taskType}}</span>
+            </div>
+          </el-col>
+          <el-col :span="10">
+            <div class="grid-content bg-purple">
+              <span>评分类型： {{item.markingType}}</span>
+            </div>
+          </el-col>
+        </el-row>
       </div>
-      <el-collapse v-model="activeName" accordion @change="handleChange" >
-        <el-collapse-item title="作业内容" :name=mergeName(item.taskId,1)>
-          <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
-          <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
-        </el-collapse-item>
-        <el-collapse-item title="作业完成情况" :name=item.taskId>
-        </el-collapse-item>
-        <el-collapse-item title="作业成绩情况" :name=mergeName(item.taskId,2)>
-          <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
-          <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
-        </el-collapse-item>
-
-      </el-collapse>
     </el-card>
 
 </div>
@@ -51,10 +65,9 @@ export default {
   },
   created () {
     const _this = this;
-    this.taskFrom.offerId = this.$store.getters.getOfferId;
     axios.get("http://localhost:8181/task/findByOfferId/",{
       params: {
-        offerId: this.taskFrom.offerId,
+        offerId: this.$store.getters.getOfferId,
       },
       crossDomain: true,
       xhrFields: {withCredentials: true},

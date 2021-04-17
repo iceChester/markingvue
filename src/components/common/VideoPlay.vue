@@ -28,7 +28,7 @@ export default {
         fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
         sources: [{
           type: "video/mp4", // 类型
-          src: "http://localhost:8081/"+this.videoSrc
+          src: "http://localhost:8080/"+this.videoSrc
               // 'D:\\课程文件\\大四\\综合实训\\演示视频\\20201222_183905.mp4' // url地址
           // require('../../assets/studentTask/12/个人作业/3/T301/suju21618569634758.mp4')
           //../../assets/studentTask/12/个人作业/3/T301/suju21618569634758.mp4

@@ -1,9 +1,10 @@
 <template>
 <div>
-  <div class="toggle-button" @click="toggleCollapse" style="height: 30px">》</div>
-  <el-aside style="background-color: rgb(238, 241, 246)" :width="isCollapse?'66px':'200px'">
+  <div class="toggle-button" @click="toggleCollapse" style="height: 30px;background-color:#545c64" >菜单</div>
+  <el-aside style="background-color: #545c64;height: 850px;" :width="isCollapse?'66px':'200px'">
     <el-menu v-bind:router="true" v-bind:default-active="$route.path" :collapse="isCollapse"
-             class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" mode="vertical">
+             class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" mode="vertical"
+             background-color="#545c64" active-text-color="#ffd04b" text-color="#fff">
       <el-submenu v-for="(item,index) in this.menus" v-bind:index="index" v-if="item.meta.course==='course'">
         <template slot="title">
           <i class="el-icon-message"></i>

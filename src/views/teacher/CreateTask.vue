@@ -12,12 +12,10 @@
             :label="item.label"
             :value="item.value">
         </el-option>
-        <el-option label="个人作业" value="1"></el-option>
-        <el-option label="小组作业" value="2"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="评分方式" prop="markingType">
-      <el-select v-model="taskForm.markingType" placeholder="请选择评分方式">
+      <el-select v-model="taskForm.markingType" placeholder="请选择评分方式" @change="this.handleChange">
         <el-option
             v-for="item in markingOptions"
             :key="item.value"
@@ -25,6 +23,28 @@
             :value="item.value">
         </el-option>
       </el-select>
+    </el-form-item>
+    <el-form-item label="评分权重:" v-if="isCooperationShow" v-for="(item,index) in this.teacherList">
+      <div >
+        <el-row :gutter="24">
+          <el-col :span="4">
+            <div>
+              <span>账号： {{item.account}}</span>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div>
+              <span>姓名： {{item.teacherName}}</span>
+            </div>
+          </el-col>
+        </el-row>
+        <div>
+          权重：<el-slider
+            v-model="item.weight"
+            show-input style="width: 600px">
+        </el-slider>
+        </div>
+      </div>
     </el-form-item>
     <el-form-item label="截至日期" required>
       <el-col :span="11">
@@ -49,32 +69,50 @@
 export default {
   name: "CreateTask",
   data() {
+    let validateWeight = (rule,value,callback) =>{
+      let account = parseInt("0");
+      this.teacherList.forEach((item,index) => {
+        account = account + parseInt(item.weight);
+      });
+      console.log(account);
+      if(account!=100){
+        callback(new Error("评分权重值之和需要为100"))
+      }else {
+        callback()
+      }
+    }
     return {
+      isCooperationShow: false,
+      teacherList: [],
+      weightCount: 0,
+      teacherCount: 0,
       taskForm: {
         title: '',
-        taskType: 1,
-        markingType: 1,
+        taskType: 0,
+        markingType: 0,
         deadline: '',
         detail: '',
         offerId: '',
+        markingAccount: '',
+        markingWeight: '',
       },
       taskOptions: [
         {
-          value: 1,
+          value: 0,
           label: '个人作业'
         },
         {
-          value: 2,
+          value: 1,
           label: '小组作业'
         }
       ],
       markingOptions: [
         {
-          value: 1,
+          value: 0,
           label: '主教师评分'
         },
         {
-          value: 2,
+          value: 1,
           label: '教师合作评分'
         }
       ],
@@ -89,6 +127,10 @@ export default {
         deadline: [
           { type: 'date', required: true, message: '请选择截至日期', trigger: 'change' }
         ],
+        weight: [
+          { required: true, message: '输入权重', trigger: 'change' },
+          {validator: validateWeight,trigger: 'blur'}
+        ],
         markingType: [
           { required: true, message: '请选择评分方式', trigger: 'change' }
         ],
@@ -98,38 +140,88 @@ export default {
       }
     };
   },
+
   methods: {
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          const _this = this;
-          this.taskForm.offerId = this.$store.getters.getOfferId;
-          axios.post("http://localhost:8181/task/save",this.taskForm,{
-            crossDomain: true,
-            xhrFields: {withCredentials: true},
-            headers: {
-              token: this.getToken(),
-            }
-          }).then(function (resp) {
-            console.log(resp.data)
-            if(resp.data){
-              _this.$alert("《"+_this.taskForm.title+'》发布成功', '消息', {
-                confirmButtonText: '确定',
-                callback: action => {
-                  _this.$router.push('/CourseTasks');
-                }
-              });
-            }
-          })
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
+      let sum = 0;
+      let weight = "";
+      let account = "";
+      if(this.isCooperationShow){
+        sum = parseInt("0");
+        this.teacherList.forEach((item,index) => {
+          weight = weight+item.weight+",";
+          account = account + item.account+",";
+          sum = sum + parseInt(item.weight);
+        });
+      }else {
+        sum = 100;
+        account = account + this.teacherList[0].account+",";
+      }
+      if(sum!=100){
+        this.$alert('分数权重值之和需要为100', '警告', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'warning',
+              message: "请重新输入权重"
+            });
+          }
+        });
+      }else{
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            const _this = this;
+            this.taskForm.offerId = this.$store.getters.getOfferId;
+            this.taskForm.markingWeight = weight;
+            this.taskForm.markingAccount = account;
+            axios.post("http://localhost:8181/task/save",this.taskForm,{
+              crossDomain: true,
+              xhrFields: {withCredentials: true},
+              headers: {
+                token: this.getToken(),
+              }
+            }).then(function (resp) {
+              console.log(resp.data)
+              if(resp.data){
+                _this.$alert("《"+_this.taskForm.title+'》发布成功', '消息', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    _this.$router.push('/CourseTasks');
+                  }
+                });
+              }
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      }
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-    }
+    },
+    handleChange(value){
+      if(value=="1"){
+        const _this = this;
+        axios.get("http://localhost:8181/offerCourses/findTeacher",{
+          params: {
+            offerId: this.$store.getters.getOfferId,
+          },
+          crossDomain: true,
+          xhrFields: {withCredentials: true},
+          headers: {
+            token: this.getToken(),
+          }
+        }).then(function (resp){
+          _this.teacherList = resp.data;
+          console.log(_this.teacherList)
+          _this.teacherCount = _this.teacherList.length + 0;
+          _this.isCooperationShow = true;
+        })
+      }
+      this.isCooperationShow = false;
+    },
   }
 }
 </script>
@@ -137,7 +229,7 @@ export default {
 .taskForm {
   margin: 0 auto;
   padding-top: 30px;
-  width: 60%;
+  width: 80%;
 }
 .text-area {
   width: 45%;

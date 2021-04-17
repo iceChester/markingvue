@@ -3,7 +3,7 @@
     <NavBar ref="navBar" :routes="this.$store.getters.getGlobalRouter"></NavBar>
     <el-container style="height: 100%; border: 1px solid #eee">
       <CourseSideBar ref="courseSideBar" :menus="this.menus" ></CourseSideBar>
-      <el-container>
+      <el-container style="overflow: auto;height: 90vh">
         <el-row>
           <el-col :span="24">
             <div style="margin-top: 15px ;margin-left: 30px;">

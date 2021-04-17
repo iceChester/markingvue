@@ -5,7 +5,7 @@
       <el-main>
         <router-view/>
       </el-main>
-      <el-footer>@By XiaoMao</el-footer>
+      <el-footer style="margin-top: 350px">@By XiaoMao</el-footer>
     </el-container>
   </div>
 </template>

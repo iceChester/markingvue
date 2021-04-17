@@ -10,6 +10,7 @@ import 'vue-video-player/src/custom-theme.css'
 import 'video.js/dist/video-js.css'
 import axios from 'axios'
 import '@/permission.js'
+import '@/components/common/css/font.css';
 Vue.use(VideoPlayer)
 
 

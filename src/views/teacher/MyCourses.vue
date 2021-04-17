@@ -25,11 +25,10 @@ export default {
   methods: {
     init(){
       const _this = this;
-      let teacherId = this.$store.getters.getRoleId - 0;
         axios.get("http://localhost:8181/timetable/teacherCourse",
             {
               params: {
-                id: teacherId
+                account: this.$store.getters.getAccount
               },
               crossDomain: true,
               xhrFields: {withCredentials: true},

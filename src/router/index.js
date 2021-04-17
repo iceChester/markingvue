@@ -31,6 +31,7 @@ export const fixedRouter = [
   {
     path: "/Index",
     name: "首页",
+    hidden: true,
     meta: {
       course: 'null'
     },
