@@ -140,7 +140,9 @@ export default {
       }
     };
   },
-
+  mounted() {
+    this.handleChange(0);
+  },
   methods: {
     submitForm(formName) {
       let sum = 0;
@@ -149,13 +151,18 @@ export default {
       if(this.isCooperationShow){
         sum = parseInt("0");
         this.teacherList.forEach((item,index) => {
+          console.log(item.weight);
+          if(item.weight==undefined){
+            item.weight = 0;
+          }
           weight = weight+item.weight+",";
           account = account + item.account+",";
           sum = sum + parseInt(item.weight);
         });
       }else {
         sum = 100;
-        account = account + this.teacherList[0].account+",";
+        weight = 100 + ",";
+        account = this.teacherList[0].account+",";
       }
       if(sum!=100){
         this.$alert('分数权重值之和需要为100', '警告', {
@@ -202,7 +209,6 @@ export default {
       this.$refs[formName].resetFields();
     },
     handleChange(value){
-      if(value=="1"){
         const _this = this;
         axios.get("http://localhost:8181/offerCourses/findTeacher",{
           params: {
@@ -217,10 +223,12 @@ export default {
           _this.teacherList = resp.data;
           console.log(_this.teacherList)
           _this.teacherCount = _this.teacherList.length + 0;
-          _this.isCooperationShow = true;
         })
+      if(value=="1"){
+        _this.isCooperationShow = true;
+      }else {
+        this.isCooperationShow = false;
       }
-      this.isCooperationShow = false;
     },
   }
 }

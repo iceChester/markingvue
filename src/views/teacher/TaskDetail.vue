@@ -68,12 +68,16 @@
         <el-table-column
             width="240"
             fixed="right"
-            label="评分">
+            label="评分"
+            v-if="isMarkingShow">
           <template slot-scope="scope">
             <el-input
-                v-model="marking"
+                v-model="scope.row.score"
                 size="normal"
-                placeholder="输入分数" style="height: 80%;width: 60%"/>
+                type="number"
+                placeholder="输入分数" style="height: 80%;width: 60%"
+                @change="setScore(scope.row)"
+                :max="1"/>
             <el-button size="mini" type="primary"  @click="updateStudent(scope.row)" style="margin-left: 10%">确定</el-button>
           </template>
         </el-table-column>
@@ -154,9 +158,13 @@ export default {
       showBigImgList:[],
       isImgShow: false,
       isVideoShow: false,
+      isMarkingShow: false,
       isBarShow: false,
       isPieShow: false,
-      marking: '',
+      markingType: {
+        position: '',
+        weight: [],
+      },
       pageSize: 6,
       total: null,
       drawer: false,
@@ -181,10 +189,10 @@ export default {
         scoreTotal: '',
         fileName: [],
         submitDate: '',
+        score: '',
       }],
     }
   },
-
   created() {
     this.taskId = this.$route.query.taskId;
     this.$store.dispatch("changeOfferId",this.$route.query.offerId);
@@ -195,8 +203,61 @@ export default {
     this.groupDetail();
     this.getBarData();
     this.getPieData();
+    this.checkMarking();
   },
   methods: {
+    setScore(data){
+      const testScore = parseInt(data.score);
+      console.log(testScore);
+      if(testScore>=0&&testScore<=100){
+        if(this.markingType.position==1){
+          data.scoreOne = testScore;
+        }else if(this.markingType.position==2){
+          data.scoreTwo = testScore;
+        }else if(this.markingType.position==3){
+          data.scoreThree = testScore;
+        }
+        if(this.markingType.weight[0]==0){
+          data.scoreOne = 0;
+        }
+        if(this.markingType.weight[1]==0){
+          data.scoreTwo = 0;
+        }
+        if(this.markingType.weight[2]==0){
+          data.scoreThree = 0;
+        }
+        if(data.scoreOne!=undefined&&data.scoreTwo!=undefined&&data.scoreThree!=undefined){
+          data.scoreTotal = data.scoreOne * this.markingType.weight[0] + data.scoreTwo * this.markingType.weight[1] + data.scoreThree * this.markingType.weight[2];
+          this.score = 0;
+        }
+      }else {
+        this.$message({
+          type: 'warning',
+          message: "分数需要在0~100；请重新输入分数"
+        });
+      }
+    },
+    checkMarking(){
+      const _this = this;
+      axios.get("http://localhost:8181/task/checkMarking/", {
+        params: {
+          taskId: this.taskId,
+          account: this.$store.getters.getAccount,
+        },
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+         _this.markingType = resp.data;
+        if(_this.markingType.position==4){
+          _this.isMarkingShow = false;
+        }else{
+          _this.isMarkingShow = true;
+        }
+      })
+    },
     getPieData(){
       const _this = this;
       axios.get("http://localhost:8181/studentTask/pieData/", {
