@@ -1,12 +1,15 @@
 <template>
   <div>
+    <div style="margin: 30px auto; text-align: center">
+        <h1>作业详情</h1>
+    </div>
+    <el-divider></el-divider>
     <el-page-header @back="goBack" content="详情页面"></el-page-header>
-    <el-row :gutter="20">
-      <el-col :span="12"><Bar ref="bar" :barData = this.barData :xData = this.xData></Bar> </el-col>
-      <el-col :span="12"><Pie ref="pie" :pieData = this.pieData></Pie> </el-col>
+    <el-row :gutter="20" style="margin-top: 30px">
+      <el-col :span="12"><Bar ref="bar" :barData = this.barData :xData = this.xData v-if="isBarShow"></Bar> </el-col>
+      <el-col :span="12"><Pie ref="pie" :pieData = this.pieData v-if="isPieShow"></Pie> </el-col>
     </el-row>
     <div>
-      <el-button type="primary" @click="toExcel">导出表格</el-button>
       <el-table
           :data="tableData"
           height="280"
@@ -76,10 +79,7 @@
         </el-table-column>
         <el-table-column width="240" fixed="right">
           <template slot="header" slot-scope="scope">
-            <el-input
-                v-model="search"
-                size="normal"
-                placeholder="输入关键字搜索" style="height: 80%"/>
+            <el-button type="primary" @click="toExcel" style="padding-right: 5%;padding-top: 20px">导出表格</el-button>
           </template>
           <template slot-scope="scope">
             <el-button size="mini" type="primary"  @click="updateStudent(scope.row)">下载作业</el-button>
@@ -154,19 +154,18 @@ export default {
       showBigImgList:[],
       isImgShow: false,
       isVideoShow: false,
+      isBarShow: false,
+      isPieShow: false,
       marking: '',
       pageSize: 6,
       total: null,
       drawer: false,
       innerDrawer: false,
-      barData: [120, 200, 150, 80, 70, 110, 130],
-      xData: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      barData: [0, 0, 0, 0, 0, 0],
+      xData: ['0~20', '20~40', '40~60', '60~80', '80~100',"未批改"],
       pieData:[          // 数据数组，name 为数据项名称，value 为数据项值
-        {value:235, name:'视频广告'},
-        {value:274, name:'联盟广告'},
-        {value:310, name:'邮件营销'},
-        {value:335, name:'直接访问'},
-        {value:400, name:'搜索引擎'}
+        {value:0, name:'已完成'},
+        {value:100, name:'未完成'},
       ],
       show: false,
       offerId: '',
@@ -194,8 +193,45 @@ export default {
   mounted(){
     // 在通过mounted调用即可
     this.groupDetail();
+    this.getBarData();
+    this.getPieData();
   },
   methods: {
+    getPieData(){
+      const _this = this;
+      axios.get("http://localhost:8181/studentTask/pieData/", {
+        params: {
+          taskId: this.taskId,
+          offerId: this.$store.getters.getOfferId,
+        },
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        console.log(resp);
+        _this.pieData[0].value = resp.data[0];
+        _this.pieData[1].value = resp.data[1];
+        _this.isPieShow = true;
+      })
+    },
+    getBarData(){
+      const _this = this;
+      axios.get("http://localhost:8181/studentTask/barData/", {
+        params: {
+          taskId: this.taskId,
+        },
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        _this.barData = resp.data;
+        _this.isBarShow = true;
+      })
+    },
     toExcel(){
       axios.get("http://localhost:8181/studentTask/export/", {
         params: {
@@ -209,7 +245,7 @@ export default {
         }
       }).then(function (resp) {
         const blob = new Blob([resp.data], {type: 'application/vnd.ms-excel'})
-        let filename = 'xxx.xls'
+        let filename = '成绩单.xls'
         // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
         const elink = document.createElement('a')
         elink.download = filename

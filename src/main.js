@@ -16,7 +16,6 @@ Vue.use(VideoPlayer)
 
 Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
-
 Vue.prototype.getToken = function() {
   const token = localStorage.getItem("token");
   if (token === "" || token == null) {

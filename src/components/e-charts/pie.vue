@@ -8,41 +8,67 @@
 export default {
   name: "pie",
   props: {
-    pieData: [],
+    pieData:  {
+      type: Array
+    },
   },
   data() {
     return {
-      series: [{
-        name: '访问来源',
-        data:[],
-        type: 'pie',    // 设置图表类型为饼图
-        radius: '55%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。
-      }],
-      toolbox: { // 工具箱
-        show: true,
-        feature: {
-          dataZoom: {
-            yAxisIndex: 'none'
+      series: [
+          {
+            name: '人数',
+            data:this.pieData,
+            type: 'pie',    // 设置图表类型为饼图
+            radius: '55%',  // 饼图的半径，外半径为可视区尺寸（容器高宽中较小一项）的 55% 长度。,
+            label: {
+              normal: {
+                show: true,
+                // position: 'inside',
+                formatter: '{b}:{d}%',//模板变量有 {a}、{b}、{c}、{d}，分别表示系列名，数据名，数据值，百分比。{d}数据会根据value值计算百分比
+                textStyle : {
+                  align : 'center',
+                  baseline : 'middle',
+                  fontFamily : '微软雅黑',
+                  fontSize : 15,
+                  fontWeight : 'bolder'
+                },
+              },
+            },
+            labelLine: {
+              normal: {
+                lineStyle: {
+                  color: 'rgb(67,251,7)'
+                },
+                smooth: 0.2,
+                length: 50,
+                length2: 20
+              }
+            },
           },
-          dataView: {readOnly: false},
-          magicType: {type: ['bar', 'line']},
-          restore: {}
-        }
-      }
+      ],
     }
   },
   mounted() {
-    this.series[0].data = this.pieData;
-    this.echartsInit();
+    this.initOptionData();
   },
   methods: {
-    echartsInit(){
-      let myChart = this.$echarts.init(document.getElementById('accomplish'));
-      myChart.setOption({
+    initOptionData() {
+      let chart = this.$echarts.init(document.getElementById('accomplish'));
+      // let result = this.data;
+      let options = {
+        title: {
+          text: "完成分布图",
+          subtext: "",
+        },
+        tooltip: {
+          trigger: "item",
+          formatter: '{a}: {b}<br />{c}人: {d}%',
+        },
+        calculable: true,
         series: this.series,
-        // toolbox: this.toolbox,
-      });
-    }
+      };
+      chart.setOption(options);
+    },
   }
 }
 </script>

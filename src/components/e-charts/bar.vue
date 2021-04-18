@@ -7,56 +7,73 @@ require('echarts/theme/macarons') // echarts theme
 export default {
   name: "bar",
   props: {
-    barData: [],
-    xData: []
+    barData: {
+      type: Array
+    },
+    xData: {
+      type: Array
+    },
   },
   data() {
     return {
       series: [{
-        data: [],
+        data: this.barData,
         type: 'bar',
-        showBackground: true,
+        showBackground: false,
         backgroundStyle: {
           color: 'rgba(220, 220, 220, 0.8)'
-        }
+        },
       }],
-      xAxis: {
-        type: 'category',
-        data:[]
-      },
-      yAxis: {
-        type: 'value'
-      },
-      toolbox: { // 工具箱
-        show: true,
-        feature: {
-          dataZoom: {
-            yAxisIndex: 'none'
-          },
-          dataView: {readOnly: false},
-          magicType: {type: ['bar', 'line']},
-          restore: {}
-        }
-      },
     }
   },
 
   mounted() {
-    this.series[0].data = this.barData;
-    this.xAxis.data = this.xData;
+    // this.series[0].data = this.barData;
+    // this.xAxis.data = this.xData;
     console.log(this.barData)
-    this.echartsInit();
+    this.initOptionData();
   },
   methods: {
-    echartsInit(){
-      let myChart = this.$echarts.init(document.getElementById('score'));
-      myChart.setOption({
-        xAxis: this.xAxis,
-        yAxis: this.yAxis,
+    initOptionData() {
+      let chart = this.$echarts.init(document.getElementById('score'));
+      // let result = this.data;
+      let options = {
+        title: {
+          text: "作业分数分布柱状图",
+          subtext: "",
+        },
+        tooltip: {
+          trigger: "axis",
+        },
+
+        calculable: true,
+        toolbox: { // 工具箱
+          show: true,
+          feature: {
+            dataZoom: {
+              yAxisIndex: 'none'
+            },
+            dataView: {readOnly: false},
+            magicType: {type: ['bar', 'line']},
+            restore: {}
+          }
+        },
+        xAxis: [
+          {
+            data: this.xData,
+          },
+
+        ],
+        yAxis: [
+          {
+            name: '人数',
+            type: "value",
+          },
+        ],
         series: this.series,
-        toolbox: this.toolbox,
-      });
-    }
+      };
+      chart.setOption(options);
+    },
   }
 }
 </script>
