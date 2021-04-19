@@ -166,7 +166,7 @@ export default {
         position: '',
         weight: [],
       },
-      pageSize: 6,
+      pageSize: 10,
       total: null,
       drawer: false,
       innerDrawer: false,

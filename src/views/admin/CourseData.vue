@@ -1,11 +1,11 @@
 <template>
   <div style="margin: 30px 8%">
     <div style="margin: 30px auto; text-align: center">
-      <h1>学生信息</h1>
+      <h1>课程信息</h1>
     </div>
     <el-divider></el-divider>
-    <el-row :gutter="20">
-      <el-col :span="10" ><div>
+    <el-row :gutter="20" style="margin-bottom: 20px">
+      <el-col :span="2" style="margin-left: 8%"><div>
         <el-upload
             class="upload-demo"
             action="http://localhost:8181/course/importExcel/"
@@ -20,19 +20,24 @@
             :on-exceed="handleExceed"
             :file-list="fileList"
         >
-          <el-button size="small" type="primary">点击上传</el-button>
+          <el-button size="small" type="primary">导入数据</el-button>
         </el-upload>
       </div></el-col>
-      <el-col :span="2" style="float: right"><div>
-        <a style="color: #01a7f8;" class='download' href='http://localhost:8181/data/课程信息模板.xls' download="学生信息模板.xls" title="学生信息模板下载">
-          Excel模板下载
-        </a>
+      <el-col :span="2" style="float: left"><div>
+        <el-link :underline="false" :href="fileUrl" download="课程信息模板.xls" >
+          <el-button size="small" type="primary" @click="downTemplate">课程信息模板下载</el-button>
+        </el-link>
+      </div></el-col>
+      <el-col :span="2" style="float: right;margin-right: 10%"><div>
+        <el-button type="primary" @click="toExcel"size="small" >导出表格</el-button>
       </div></el-col>
     </el-row>
     <div>
       <el-table
-          :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
-          style="width: 100%">
+          :data="tableData"
+          height="580"
+          border
+          style="width: 80%;margin-left: 8%">
         <el-table-column
             label="编号"
             prop="courseId">
@@ -43,20 +48,11 @@
         </el-table-column>
         <el-table-column
             align="right">
-          <template slot="header" slot-scope="scope">
-            <el-input
-                v-model="search"
-                size="mini"
-                placeholder="输入关键字搜索"/>
-          </template>
           <template slot-scope="scope">
             <el-button
                 size="mini"
-                @click="handleEdit(scope.$index, scope.row)">开设课程</el-button>
-            <el-button
-                size="mini"
                 type="danger"
-                @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+                @click="handleOpen(scope.row)">删除课程</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -66,7 +62,8 @@
           layout="prev, pager, next"
           :page-size=pageSize
           :total=total
-          @current-change="newPage">
+          @current-change="newPage"
+          style="margin: 20px 42%">
       </el-pagination>
   </div>
 </template>
@@ -80,14 +77,15 @@ export default {
       headers: {
         token: this.getToken()
       },
-      pageSize: 6,
+      pageSize: 10,
       total: null,
+      keyWord: '',
       offerId: '',
+      fileUrl: '',
       fileList:[],
       tableData: [{
-        teacherName: '',
-        className: '',
-        account: '',
+        courseName: '',
+        courseId: '',
       },
       ]
     }
@@ -111,8 +109,65 @@ export default {
     })
   },
   methods: {
-    download(){
+    toExcel(){
+      axios.get("http://localhost:8181/course/export/", {
+        params: {
+        },
+        crossDomain: true,
+        responseType: 'blob',
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        const blob = new Blob([resp.data], {type: 'application/vnd.ms-excel'})
+        let filename = '课程信息.xls'
+        // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+        const elink = document.createElement('a')
+        elink.download = filename
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href) // 释放URL 对象
 
+      })
+    },
+    handleOpen(data){
+      this.$confirm('确认删除？')
+          .then(_ => {
+            this.deleteCourse(data);
+          })
+          .catch(_ => {});
+    },
+    deleteCourse(data){
+      const _this = this;
+      axios.delete("http://localhost:8181/course/delete",{
+        params: {
+          id: data.courseId,
+        },
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        if(resp.data){
+          _this.$message({
+            type: 'info',
+            message: "删除成功"
+          });
+          this.$router.go(0);
+        }else {
+          _this.$message({
+            type: 'warning',
+            message: "删除失败"
+          });
+        }
+      })
+    },
+    downTemplate(){
+      this.fileUrl = "http://localhost:8181/static/data/课程信息模板.xls";
     },
     uploadSuccess(response, file, fileList){
       this.fileList = [];

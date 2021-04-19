@@ -44,7 +44,7 @@
 export default {
   data() {
     return {
-      pageSize: 6,
+      pageSize: 10,
       total: null,
       tableData: null,
       search: ''

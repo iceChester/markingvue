@@ -65,7 +65,7 @@ export default {
       dialogVisible: false,
       CourseGroupData: [],
       fileList: [],
-      pageSize: 6,
+      pageSize: 10,
       total: null,
       // 获取row的key值
       getRowKeys(row) {

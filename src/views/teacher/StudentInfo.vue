@@ -2,7 +2,7 @@
 <div>
   <el-table
       :data="tableData"
-      height="380"
+      height="580"
       border
       style="width: 80%">
     <el-table-column fixed label="序号" width="50" align="center">
@@ -56,7 +56,7 @@ export default {
     data() {
       return {
         show: false,
-        pageSize: 6,
+        pageSize: 10,
         total: null,
         offerId: '',
         tableData: [{
