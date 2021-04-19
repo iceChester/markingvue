@@ -3,7 +3,7 @@
       <el-row >
         <el-col :span="4" style="margin-top: 15px;margin-left: 20px;height: 80px;">
           <div>
-            <span class="title" style="color: #fff">作业提交与评分系统</span>
+            <span class="title" style="color: #fff;padding-top: 20px">作业提交与评分系统</span>
           </div>
         </el-col>
         <el-col :span="19">

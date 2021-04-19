@@ -105,7 +105,8 @@
           title="xxx的作业"
           :visible.sync="drawer"
           :before-close="handleClose"
-          size="60%"
+          size="50%"
+          style="overflow: auto"
           >
         <div>
           <el-button @click="openInnerDrawer">其他文件!</el-button>
@@ -123,15 +124,15 @@
               <el-image :src="item" class="image"/>
             </el-carousel-item>
           </el-carousel>
-          <div>
-            <el-button @click="this.showBigImg" >预览</el-button>
+          <div >
+            <el-button @click="this.showBigImg"  style="margin: 20px 50%">预览</el-button>
             <el-image-viewer
                 v-if="showViewer"
                 :on-close="()=>{showViewer=false}"
                 :url-list="this.imgSrc" />
           </div>
         </div>
-        <div style="width: 75%;margin: 0 auto;" v-show="isVideoShow">
+        <div style="width: 75%;margin: 30px auto;height: 45%" v-show="isVideoShow">
           <Video ref="video" :videoSrc = "this.videoSrc"></Video>
         </div>
       </el-drawer>
@@ -210,25 +211,55 @@ export default {
       const testScore = parseInt(data.score);
       console.log(testScore);
       if(testScore>=0&&testScore<=100){
-        if(this.markingType.position==1){
-          data.scoreOne = testScore;
-        }else if(this.markingType.position==2){
-          data.scoreTwo = testScore;
-        }else if(this.markingType.position==3){
-          data.scoreThree = testScore;
-        }
-        if(this.markingType.weight[0]==0){
-          data.scoreOne = 0;
-        }
-        if(this.markingType.weight[1]==0){
-          data.scoreTwo = 0;
-        }
-        if(this.markingType.weight[2]==0){
-          data.scoreThree = 0;
+        if(this.markingType.weight.length==1){
+          if(this.markingType.position==1){
+            data.scoreOne = testScore;
+            data.scoreTwo = 0;
+            data.scoreThree = 0;
+          }
+        }else if(this.markingType.weight.length==2){
+          if(this.markingType.position==1){
+            data.scoreOne = testScore;
+            data.scoreThree = 0;
+          }else if(this.markingType.position==2){
+            data.scoreTwo = testScore;
+            data.scoreThree = 0;
+          }
+          if(this.markingType.weight[0]==0){
+            data.scoreOne = 0;
+          }
+          if(this.markingType.weight[1]==0){
+            data.scoreTwo = 0;
+          }
+        }else if(this.markingType.weight.length==3){
+          if(this.markingType.position==1){
+            data.scoreOne = testScore;
+          }else if(this.markingType.position==2){
+            data.scoreTwo = testScore;
+          }else if(this.markingType.position==3){
+            data.scoreThree = testScore;
+          }
+          if(this.markingType.weight[0]==0){
+            data.scoreOne = 0;
+          }
+          if(this.markingType.weight[1]==0){
+            data.scoreTwo = 0;
+          }
+          if(this.markingType.weight[2]==0){
+            data.scoreThree = 0;
+          }
         }
         if(data.scoreOne!=undefined&&data.scoreTwo!=undefined&&data.scoreThree!=undefined){
-          data.scoreTotal = data.scoreOne * this.markingType.weight[0] + data.scoreTwo * this.markingType.weight[1] + data.scoreThree * this.markingType.weight[2];
-          this.score = 0;
+          if(this.markingType.weight.length ==1){
+            data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0;
+          }else if(this.markingType.weight.length ==2){
+            data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0+ data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0;
+          }else if(this.markingType.weight.length ==3){
+            data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0 + data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0 + data.scoreThree * parseFloat(this.markingType.weight[2])/100.0;
+          }
+          console.log();
+          data.score = 0;
+          this.saveScore(data);
         }
       }else {
         this.$message({
@@ -236,6 +267,28 @@ export default {
           message: "分数需要在0~100；请重新输入分数"
         });
       }
+    },
+    saveScore(data){
+      const _this = this;
+      axios.post("http://localhost:8181/studentTask/saveScore",data,{
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        if(resp.data){
+          _this.$message({
+            type: 'info',
+            message: "评分成功"
+          });
+        }else {
+          _this.$message({
+            type: 'warning',
+            message: "评分失败"
+          });
+        }
+      })
     },
     checkMarking(){
       const _this = this;
@@ -251,6 +304,7 @@ export default {
         }
       }).then(function (resp) {
          _this.markingType = resp.data;
+         console.log(_this.markingType.position)
         if(_this.markingType.position==4){
           _this.isMarkingShow = false;
         }else{

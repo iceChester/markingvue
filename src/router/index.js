@@ -16,6 +16,9 @@ import StudentCourse from "@/views/student/StudentCourse";
 import MyGroup from "@/views/student/MyGroup";
 import StudentTasks from "@/views/student/StudentTasks";
 import CourseGroup from "@/views/teacher/CourseGroup";
+import StudentData from "@/views/admin/StudentData";
+import TeacherData from "@/views/admin/TeacherData";
+import CourseData from "@/views/admin/CourseData";
 Vue.use(VueRouter)
 
 export const fixedRouter = [
@@ -69,6 +72,33 @@ export const permissionRouter  = [
         component: Courses,
       },
 
+    ]
+  },
+  {
+    path: '/dataInfo',
+    name: '系统信息',
+    component: Index,
+    show: true,
+    meta: {
+      roles: ['admin'],
+      course: 'null'
+    },
+    children:[
+      {
+        path: '/studentData',
+        name: '学生信息',
+        component: StudentData
+      },
+      {
+        path: '/TeacherData',
+        name: '教师信息',
+        component: TeacherData
+      },
+      {
+        path: '/CourseData',
+        name: '课程信息',
+        component: CourseData
+      },
     ]
   },
   {
