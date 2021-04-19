@@ -177,11 +177,11 @@ export default {
     handleOpen(data){
       this.$confirm('确认删除？')
           .then(_ => {
-            this.deleteCourse(data);
+            this.deleteStudent(data);
           })
           .catch(_ => {});
     },
-    deleteCourse(data){
+    deleteStudent(data){
       const _this = this;
       axios.delete("http://localhost:8181/student/delete",{
         params: {

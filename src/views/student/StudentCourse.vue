@@ -1,7 +1,6 @@
 <template>
   <div>
     <MyCoursesData ref="myCoursesData" :option="this.option"></MyCoursesData>
-
   </div>
 </template>
 

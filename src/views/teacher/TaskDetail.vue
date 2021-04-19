@@ -423,7 +423,7 @@ export default {
     handleClose(done) {
       this.$confirm('确认关闭？')
           .then(_ => {
-            this.isVideoShow = !this.isVideoShow;
+            this.isVideoShow = false;
             done();
           })
           .catch(_ => {});
@@ -433,13 +433,19 @@ export default {
     showBigImg(){
       this.showViewer=true;
       this.drawer= false;
-      this.isVideoShow = !this.isVideoShow;
+      this.isVideoShow = false;
     },
     openDrawer(row) {
       let path = "studentTask/"+this.$store.getters.getOfferId+"/" + "个人作业" + "/" +this.taskId + "/" + row.account + "/";
       let videoName = row.videoFile.split(",")
       let imgName = row.imgFile.split(",")
-      this.videoSrc = path + videoName[0];
+      console.log(videoName)
+      if(videoName.length>0&&videoName[0]!=""){
+        this.videoSrc = path + videoName[0];
+        this.isVideoShow = true;
+      }else {
+        this.isVideoShow = false;
+      }
       this.imgSrc = [];
       imgName.forEach((item,index) =>{
         if(item!=""){
@@ -450,7 +456,6 @@ export default {
         this.isImgShow = true;
       }
       this.drawer = !this.drawer;
-      this.isVideoShow = !this.isVideoShow;
     },
     openInnerDrawer(){
       this.innerDrawer = !this.innerDrawer;

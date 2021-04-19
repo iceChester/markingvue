@@ -72,8 +72,10 @@
           action="http://localhost:8181/studentTask/uploadTask/"
           :headers="this.headers"
           :data="this.taskData"
+          :multiple = "true"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
+          :on-success="cleanFileList"
           :file-list="fileList"
           :auto-upload="false">
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
@@ -82,7 +84,7 @@
       </el-upload>
       <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">关 闭</el-button>
-      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+<!--      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
       </span>
     </el-dialog>
   </div>
@@ -115,11 +117,18 @@ export default {
     this.taskDetail();
   },
   methods: {
+    cleanFileList(response, file, fileList){
+      this.$message({
+        type: 'info',
+        message: "提交成功"
+      });
+    },
     submitUpload() {
       this.$refs.upload.submit();
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
+      this.$router.go(0);
     },
     handlePreview(file) {
       console.log(file);
@@ -153,6 +162,7 @@ export default {
     handleClick(data) {
       this.dialogVisible = true;
       this.taskData.taskId = data.taskId;
+      this.fileList = [];
     },
     clickRowHandle(row, column, event) {
       if (this.expands.includes(row.taskId)) {

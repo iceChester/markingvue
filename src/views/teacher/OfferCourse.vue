@@ -8,9 +8,9 @@
       <el-form-item label="课程名称">
         <el-input v-model="ruleForm.courseName" readonly></el-input>
       </el-form-item>
-      <el-form-item label="主教师" prop="mainTeacherId">
+      <el-form-item label="主教师" prop="mainTeacher">
         <el-select
-            v-model="ruleForm.mainTeacherId"
+            v-model="ruleForm.mainTeacher"
             filterable
             remote
             reserve-keyword
@@ -20,7 +20,7 @@
           <el-option
               v-for="item in options"
               :key="item.value"
-              :label="item.teacherName+item.account"
+              :label="item.teacherName+'  '+item.account"
               :value="item.account">
           </el-option>
         </el-select>
@@ -37,7 +37,7 @@
           <el-option
               v-for="item in options"
               :key="item.value"
-              :label="item.teacherName+item.account"
+              :label="item.teacherName+'  '+item.account"
               :value="item.account">
           </el-option>
         </el-select>
@@ -54,7 +54,7 @@
           <el-option
               v-for="item in options"
               :key="item.value"
-              :label="item.teacherName+item.account"
+              :label="item.teacherName+'  '+item.account"
               :value="item.account">
           </el-option>
         </el-select>
@@ -131,7 +131,7 @@ export default {
         classes: [
           { required: true, message: '请选择班级', trigger: 'blur' }
         ],
-        mainTeacherId: [
+        mainTeacher: [
           {required: true,message:'请选择主教师', trigger: 'blur'},
           {validator: validateTeacher,trigger: 'blur'}
         ],

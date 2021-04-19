@@ -35,8 +35,8 @@
     <el-table-column
         label="操作">
       <template slot-scope="scope">
-        <el-button size="mini" type="primary" @click="updateStudent(scope.row)">编辑</el-button>
-        <el-button size="mini" type="danger">删除</el-button>
+<!--        <el-button size="mini" type="primary" @click="updateStudent(scope.row)">编辑</el-button>-->
+        <el-button size="mini" type="danger" @click="handleOpen(scope.row)">移除</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -89,6 +89,41 @@ export default {
     })
   },
   methods: {
+    handleOpen(data){
+      this.$confirm('确认将该同学移除本门课程吗？')
+          .then(_ => {
+            this.deleteStudent(data);
+          })
+          .catch(_ => {});
+    },
+    deleteStudent(data){
+      const _this = this;
+      axios.delete("http://localhost:8181/timetable/delete",{
+        params: {
+          account: data.accept,
+          offerId: this.offerId,
+        },
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        if(resp.data){
+          _this.$message({
+            type: 'info',
+            message: "移除成功"
+          });
+          this.$router.go(0);
+        }else {
+          _this.$message({
+            type: 'warning',
+            message: "移除失败"
+          });
+        }
+
+      })
+    },
     updateStudent(row){
       console.log(row)
     },

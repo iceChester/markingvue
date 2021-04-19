@@ -1,5 +1,5 @@
 <template>
-<div style="width: 70%;margin: 0 auto">
+<div style="width: 70%;margin: 0 auto;">
     <el-card class="box-card" v-for="(item,index) in taskFrom" style="margin-bottom: 30px">
       <div >
         <div slot="header" class="clearfix">

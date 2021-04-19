@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-table
-        :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+        :data="tableData.filter(data => !search || data.courseName.toLowerCase().includes(search.toLowerCase()))"
         style="width: 100%">
       <el-table-column
           label="编号"
@@ -23,10 +23,10 @@
           <el-button
               size="mini"
               @click="handleEdit(scope.$index, scope.row)">开设课程</el-button>
-          <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+<!--          <el-button-->
+<!--              size="mini"-->
+<!--              type="danger"-->
+<!--              @click="handleDelete(scope.$index, scope.row)">Delete</el-button>-->
         </template>
       </el-table-column>
     </el-table>
