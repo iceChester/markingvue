@@ -103,7 +103,7 @@ export default {
             }
           }).then(function (resp){
                 console.log(resp.data)
-                if(! resp.data){
+                if(resp.data!=0){
                   _this.$alert("《"+_this.groupForm.groupName+'》创建成功', '消息', {
                     confirmButtonText: '确定',
                     callback: action => {

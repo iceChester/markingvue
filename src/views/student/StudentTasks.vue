@@ -69,10 +69,11 @@
       <el-upload
           class="upload-demo"
           ref="upload"
-          action="http://localhost:8181/studentTask/uploadTask/"
+          action=""
           :headers="this.headers"
           :data="this.taskData"
           :multiple = "true"
+          :http-request="httpRequest"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
           :on-success="cleanFileList"
@@ -80,11 +81,9 @@
           :auto-upload="false">
         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-<!--        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
       </el-upload>
       <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">关 闭</el-button>
-<!--      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
       </span>
     </el-dialog>
   </div>
@@ -98,6 +97,8 @@ export default {
       dialogVisible: false,
       studentTaskData: [],
       fileList: [],
+      file: [],
+      newData: new FormData(),
       // 获取row的key值
       getRowKeys(row) {
         return row.taskId;
@@ -117,14 +118,47 @@ export default {
     this.taskDetail();
   },
   methods: {
+    httpRequest(param) {
+      //this.file.push(param.file);// 需要上传多个文件，为避免发送多次请求，因此在这里只进行文件的获取，param可以拿到文件上传的所有信息
+      this.newData.append('file', param.file);
+    },
     cleanFileList(response, file, fileList){
+      this.fileList = [];
       this.$message({
         type: 'info',
         message: "提交成功"
       });
     },
     submitUpload() {
+      const  _this = this;
       this.$refs.upload.submit();
+      this.newData.append('file', this.file);
+      // console.log(this.file);
+      // this.file.forEach(function (file) {// 因为要上传多个文件，所以需要遍历
+      //   console.log(1);
+      //   upData.append('file', file, file.name);
+      //   // upData.append('file', this.file); //不要直接使用我们的文件数组进行上传，你会发现传给后台的是两个Object
+      // })
+      this.newData.append("studentTask", JSON.stringify(this.taskData)) // 这里需要转换一下格式传给后台
+      console.log(this.newData);
+      axios.post("http://localhost:8181/studentTask/uploadTask/", this.newData,{
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+          'Content-Type':'multipart/form-data'
+        }
+      }).then(function(response) {
+            if (response.data) {
+              _this.$message({
+                type: 'info',
+                message: "提交成功"
+              });
+            }
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
     },
     handleRemove(file, fileList) {
       console.log(file, fileList);
@@ -162,7 +196,7 @@ export default {
     handleClick(data) {
       this.dialogVisible = true;
       this.taskData.taskId = data.taskId;
-      this.fileList = [];
+
     },
     clickRowHandle(row, column, event) {
       if (this.expands.includes(row.taskId)) {

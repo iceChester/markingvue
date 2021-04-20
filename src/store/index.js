@@ -11,6 +11,8 @@ const state={   //要设置的全局访问的state对象
   userName: '',
   account: '',
   roleId: 0,
+  taskId: '',
+  taskTitle: '',
   role: 'unload',
   groupId: '',
   globalRouter: [
@@ -56,7 +58,7 @@ const getters = {   //实时监听state值的变化(最新状态)
   },
   getRole(){
     if(!state.role){
-      return localStorage.getItem("role");
+      return sessionStorage.getItem("role");
     }
     return state.role;
   },
@@ -75,6 +77,18 @@ const getters = {   //实时监听state值的变化(最新状态)
     }
     return state.groupId;
   },
+  getTaskId(){
+    if(!state.taskId){
+      return sessionStorage.getItem("taskId");
+    }
+    return state.taskId;
+  },
+  getTaskTitle(){
+    if(!state.taskTitle){
+      return sessionStorage.getItem("taskTitle");
+    }
+    return state.taskTitle;
+  }
 };
 const mutations = {
   changeName(state,name) {   //自定义改变state初始值的方法，这里面的参数除了state之外还可以再传额外的参数(变量或对象);
@@ -106,6 +120,12 @@ const mutations = {
   },
   setGroupId(state,groupId){
     state.groupId = groupId;
+  },
+  setTaskId(state,taskId){
+    state.taskId = taskId;
+  },
+  setTaskTitle(state,taskTitle){
+    state.taskTitle = taskTitle;
   }
 };
 const actions = {
@@ -125,7 +145,7 @@ const actions = {
   },
   changeRole(context,role){
     context.commit('setRole',role);
-    localStorage.role = role;
+    sessionStorage.role = role;
   },
   changeGlobalRouter(context,antRouter){
     context.commit('setGlobalRouter',antRouter);
@@ -145,6 +165,14 @@ const actions = {
   changeGroupId(context,groupId){
     context.commit('setGroupId',groupId);
     localStorage.groupId = groupId;
+  },
+  changeTaskId(context,taskId){
+    context.commit('setTaskId',taskId)
+    sessionStorage.taskId = taskId;
+  },
+  changeTaskTitle(context,taskTitle){
+    context.commit('taskTitle',taskTitle)
+    sessionStorage.taskTitle = taskTitle;
   }
 }
 const store = new Vuex.Store({

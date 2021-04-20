@@ -57,7 +57,7 @@
               label="助教一评分">
           </el-table-column>
           <el-table-column
-              prop="scoreThere"
+              prop="scoreThree"
               label="助教二评分">
           </el-table-column>
           <el-table-column
@@ -83,7 +83,8 @@
         </el-table-column>
         <el-table-column width="240" fixed="right">
           <template slot="header" slot-scope="scope">
-            <el-button type="primary" @click="toExcel" style="padding-right: 5%;padding-top: 20px">导出表格</el-button>
+            <el-button type="primary" @click="toExcel" size="mini"  style="padding-right: 5%;">导出表格</el-button>
+            <el-button type="primary" @click="downloadAllTask" size="mini"  style="padding-right: 5%;">下载所有作业</el-button>
           </template>
           <template slot-scope="scope">
             <el-button size="mini" type="primary"  @click="updateStudent(scope.row)">下载作业</el-button>
@@ -145,6 +146,7 @@
 import Pie from '../../components/e-charts/pie.vue'
 import Bar from '../../components/e-charts/bar.vue'
 import Video from '../../components/common/VideoPlay.vue'
+import { Loading } from 'element-ui';
 export default {
   name: "TaskDetail",
   components: {
@@ -177,9 +179,10 @@ export default {
         {value:100, name:'未完成'},
       ],
       show: false,
-      offerId: '',
-      taskId: '',
+      offerId: this.$store.getters.getOfferId,
+      taskId: this.$store.getters.getTaskId,
       search: '',
+      title: this.$store.getters.getTaskTitle,
       tableData: [{
         studentName: '',
         className: '',
@@ -196,6 +199,7 @@ export default {
   },
   created() {
     this.taskId = this.$route.query.taskId;
+    this.title = this.$route.query.title;
     this.$store.dispatch("changeOfferId",this.$route.query.offerId);
 
   },
@@ -207,6 +211,34 @@ export default {
     this.checkMarking();
   },
   methods: {
+    downloadAllTask(){
+      let loadingInstance = Loading.service({
+        text: "压缩文件中，请稍等。"
+      });
+      const _this = this;
+      axios.get("http://localhost:8181/studentTask/downloadAllTask",{
+        params: {
+          taskId: this.taskId,
+        },
+        crossDomain: true,
+        responseType: 'blob',
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        let blob = new Blob([resp.data],{type:"application/zip"});
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");//创建a标签
+        link.href=url;
+        link.download = _this.title;//重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+        _this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+          loadingInstance.close();
+        });
+      })
+    },
     setScore(data){
       const testScore = parseInt(data.score);
       console.log(testScore);
@@ -259,8 +291,8 @@ export default {
           }
           console.log();
           data.score = 0;
-          this.saveScore(data);
         }
+        this.saveScore(data);
       }else {
         this.$message({
           type: 'warning',
@@ -316,7 +348,7 @@ export default {
       const _this = this;
       axios.get("http://localhost:8181/studentTask/pieData/", {
         params: {
-          taskId: this.taskId,
+          taskId: this.$store.getters.getTaskId,
           offerId: this.$store.getters.getOfferId,
         },
         crossDomain: true,

@@ -4,7 +4,7 @@
       <div >
         <div slot="header" class="clearfix">
           <span>作业名称：{{item.title}}</span>
-          <el-button style="float: right; padding: 3px 0" type="text" @click="taskDetail(item.taskId)">详情</el-button>
+          <el-button style="float: right; padding: 3px 0" type="text" @click="taskDetail(item)">详情</el-button>
         </div>
         <el-divider></el-divider>
         <el-row :gutter="20" style="margin-left: 240px;margin-bottom: 20px">
@@ -84,12 +84,15 @@ export default {
     handleChange(data){
       this.activeName = data;
     },
-    taskDetail(taskId) {
+    taskDetail(data) {
+      this.$store.dispatch("changeTaskId",data.taskId)
+      this.$store.dispatch("changeTaskTitle",data.taskTitle)
       this.$router.push({
         path: "/TaskDetail",
         query: {
-          taskId : taskId,
-          offerId: this.taskFrom[0].offerId,
+          taskId : data.taskId,
+          title: data.title,
+          offerId: data.offerId,
         }
       })
     },
