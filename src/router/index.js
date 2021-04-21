@@ -19,6 +19,9 @@ import CourseGroup from "@/views/teacher/CourseGroup";
 import StudentData from "@/views/admin/StudentData";
 import TeacherData from "@/views/admin/TeacherData";
 import CourseData from "@/views/admin/CourseData";
+import CollectingTasks from "@/views/student/CollectingTasks";
+import AccomplishTasks from "@/views/student/AccomplishTasks";
+import OverdueTask from "@/views/student/OverdueTask";
 Vue.use(VueRouter)
 
 export const fixedRouter = [
@@ -262,12 +265,22 @@ export const permissionRouter  = [
       course: 'course'
     },
     name: "作业",
-    redirect: "/StudentTasks",
+    redirect: "/CollectingTasks",
     children: [
       {
-        path: "/StudentTasks",
-        component: StudentTasks,
-        name: "我的作业",
+        path: "/CollectingTasks",
+        component: CollectingTasks,
+        name: "待完成的作业",
+      },
+      {
+        path: "/AccomplishTasks",
+        component: AccomplishTasks,
+        name: "已完成的作业",
+      },
+      {
+        path: "/Overdue",
+        component: OverdueTask,
+        name: "未按时完成的作业",
       },
     ]
   },

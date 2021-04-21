@@ -99,7 +99,8 @@ export default {
           }
           _this.setToken("");
           localStorage.clear();
-          localStorage.setItem("role", 'unload')
+          sessionStorage.clear();
+          sessionStorage.setItem("role", 'unload')
           // 跳转到登录页的时候顺便刷新
           window.location.href = window.location.origin + window.location.pathname
           // _this.$router.push({ path: "/" });

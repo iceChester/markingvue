@@ -1,91 +1,69 @@
 <template>
   <div>
-    <el-table
-        :data="studentTaskData"
-        height="550"
-        border
-        style="width: 100%"
-        ref="multipleTable"
-        tooltip-effect="dark"
-        :row-key="getRowKeys"
-        :expand-row-keys="expands"
-        @row-click="clickRowHandle">
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" inline class="table-expands">
-            <el-form-item label="分数一：">
-              <span>{{ props.row.scoreOne }}</span>
-            </el-form-item>
-            <el-form-item label="分数二：">
-              <span>{{ props.row.scoreTwo }}</span>
-            </el-form-item>
-            <el-form-item label="分数三：">
-              <span>{{ props.row.scoreThree }}</span>
-            </el-form-item>
-            <el-form-item label="总分：">
-              <span>{{ props.row.scoreTotal }}</span>
-            </el-form-item>
-            <el-form-item label="文件名:">
-              <span>{{ props.row.fileName }}</span>
-            </el-form-item>
-            <el-form-item label="提交日期">
-              <span>{{ props.row.submitDate }}</span>
-            </el-form-item>
-            <el-form-item label="作业详情：">
-              <span>{{ props.row.detail }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
-      <el-table-column
-          prop="taskId"
-          label="作业编号"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="title"
-          label="标题"
-      >
-      </el-table-column>
-      <el-table-column
-          prop="deadline"
-          label="截止日期"
-      >
-      </el-table-column>
-      <el-table-column
-          label="操作"
-      >
-        <template slot-scope="scope">
-          <el-button @click.stop="handleClick(scope.row)" type="text" size="small">提交作业</el-button>
-          <el-button type="text" size="small">查看</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-dialog
-        title="提示"
-        :visible.sync="dialogVisible"
-        width="30%"
-        :before-close="dialogClose">
-      <el-upload
-          class="upload-demo"
-          ref="upload"
-          action=""
-          :headers="this.headers"
-          :data="this.taskData"
-          :multiple = "true"
-          :http-request="httpRequest"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :on-success="cleanFileList"
-          :file-list="fileList"
-          :auto-upload="false">
-        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-      </el-upload>
-      <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">关 闭</el-button>
-      </span>
-    </el-dialog>
+    <el-divider content-position="center"><h2>已经截至</h2></el-divider>
+    <div>
+      <el-table
+          :data="studentTaskData"
+          height="550"
+          border
+          style="width: 100%"
+          ref="multipleTable"
+          tooltip-effect="dark"
+          :row-key="getRowKeys"
+          :expand-row-keys="expands"
+          @row-click="clickRowHandle">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="table-expands">
+              <el-form-item label="分数一：">
+                <span>{{ props.row.scoreOne }}</span>
+              </el-form-item>
+              <el-form-item label="分数二：">
+                <span>{{ props.row.scoreTwo }}</span>
+              </el-form-item>
+              <el-form-item label="分数三：">
+                <span>{{ props.row.scoreThree }}</span>
+              </el-form-item>
+              <el-form-item label="总分：">
+                <span>{{ props.row.scoreTotal }}</span>
+              </el-form-item>
+              <el-form-item label="文件名:">
+                <span>{{ props.row.fileName }}</span>
+              </el-form-item>
+              <el-form-item label="提交日期">
+                <span>{{ props.row.submitDate }}</span>
+              </el-form-item>
+              <el-form-item label="作业详情：">
+                <span>{{ props.row.detail }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column
+            prop="taskId"
+            label="作业编号"
+        >
+        </el-table-column>
+        <el-table-column
+            prop="title"
+            label="标题"
+        >
+        </el-table-column>
+        <el-table-column
+            prop="deadline"
+            label="截止日期"
+        >
+        </el-table-column>
+        <el-table-column
+            label="操作"
+        >
+          <template slot-scope="scope">
+            <el-button @click.stop="downloadOne(scope.row)" type="text" size="small">下载作业</el-button>
+            <el-button type="text" size="small">查看</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -133,12 +111,6 @@ export default {
       const  _this = this;
       this.$refs.upload.submit();
       this.newData.append('file', this.file);
-      // console.log(this.file);
-      // this.file.forEach(function (file) {// 因为要上传多个文件，所以需要遍历
-      //   console.log(1);
-      //   upData.append('file', file, file.name);
-      //   // upData.append('file', this.file); //不要直接使用我们的文件数组进行上传，你会发现传给后台的是两个Object
-      // })
       this.newData.append("studentTask", JSON.stringify(this.taskData)) // 这里需要转换一下格式传给后台
       console.log(this.newData);
       axios.post("http://localhost:8181/studentTask/uploadTask/", this.newData,{

@@ -24,7 +24,7 @@
 
           <el-col>
             <el-main>
-              <router-view/>
+              <router-view v-if="isRouterShow"/>
             </el-main>
           </el-col>
         </el-row>
@@ -41,12 +41,18 @@ import CourseSideBar from "@/components/common/CourseSideBar";
 import NavBar from "@/components/common/NavBar";
 export default {
   name: "CourseDetail",
+  provide () {
+    return {
+      reload: this.reload
+    }
+  },
   components: {
     NavBar,
     CourseSideBar,
   },
   data() {
     return {
+      isRouterShow: true,
       menus: [],
       option: [
         {
@@ -65,6 +71,13 @@ export default {
   created() {
     this.menus = this.$store.getters.getGlobalRouter;
   },
+  methods: {
+    async reload () {
+      this.isRouterShow = false
+      await this.$nextTick()
+      this.isRouterShow = true
+    }
+  }
 
 }
 </script>

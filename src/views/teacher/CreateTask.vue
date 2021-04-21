@@ -49,7 +49,9 @@
     <el-form-item label="截至日期" required>
       <el-col :span="11">
         <el-form-item prop="deadline">
-          <el-date-picker type="date" placeholder="选择日期" v-model="taskForm.deadline" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="taskForm.deadline" style="width: 100%;"
+                          format="yyyy-MM-dd"
+                          value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-col>
     </el-form-item>

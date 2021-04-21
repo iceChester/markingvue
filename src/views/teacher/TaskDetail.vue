@@ -66,7 +66,7 @@
           </el-table-column>
         </el-table-column>
         <el-table-column
-            width="240"
+            width="160"
             fixed="right"
             label="评分"
             v-if="isMarkingShow">
@@ -75,10 +75,10 @@
                 v-model="scope.row.score"
                 size="normal"
                 type="number"
-                placeholder="输入分数" style="height: 80%;width: 60%"
+                placeholder="输入分数" style="height: 80%;width: 90%"
                 @change="setScore(scope.row)"
                 :max="1"/>
-            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)" style="margin-left: 10%">确定</el-button>
+<!--            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)" style="margin-left: 10%">确定</el-button>-->
           </template>
         </el-table-column>
         <el-table-column width="240" fixed="right">
@@ -87,7 +87,7 @@
             <el-button type="primary" @click="downloadAllTask" size="mini"  style="padding-right: 5%;">下载所有作业</el-button>
           </template>
           <template slot-scope="scope">
-            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)">下载作业</el-button>
+            <el-button size="mini" type="primary"  @click="downloadOne(scope.row)">下载作业</el-button>
             <el-button size="mini" @click="openDrawer(scope.row)" type="primary" style="margin-left: 16px;">查看</el-button>
           </template>
         </el-table-column>
@@ -198,7 +198,6 @@ export default {
     }
   },
   created() {
-    this.taskId = this.$route.query.taskId;
     this.title = this.$route.query.title;
     this.$store.dispatch("changeOfferId",this.$route.query.offerId);
 
@@ -211,6 +210,35 @@ export default {
     this.checkMarking();
   },
   methods: {
+    downloadOne(row){
+      let loadingInstance = Loading.service({
+        text: "压缩文件中，请稍等。"
+      });
+      const _this = this;
+      axios.get("http://localhost:8181/studentTask/downloadOneTask",{
+        params: {
+          taskId: this.taskId,
+          account: row.account,
+        },
+        crossDomain: true,
+        responseType: 'blob',
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        let blob = new Blob([resp.data],{type:"application/zip"});
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");//创建a标签
+        link.href=url;
+        link.download = row.studentName+"_"+row.account+"_"+_this.title;//重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+        _this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+          loadingInstance.close();
+        });
+      })
+    },
     downloadAllTask(){
       let loadingInstance = Loading.service({
         text: "压缩文件中，请稍等。"
@@ -449,9 +477,7 @@ export default {
         }
       })
     },
-    updateStudent(row){
-      console.log(row)
-    },
+
     handleClose(done) {
       this.$confirm('确认关闭？')
           .then(_ => {

@@ -52,6 +52,7 @@
 
 <script>
 export default {
+  inject: ['reload'],
   name: "StudentInfo",
     data() {
       return {
@@ -114,7 +115,7 @@ export default {
             type: 'info',
             message: "移除成功"
           });
-          this.$router.go(0);
+          this.reload();
         }else {
           _this.$message({
             type: 'warning',

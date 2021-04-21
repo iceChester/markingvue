@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     userLogin() {
+      const _this  = this;
       this.$axios({
         method: "post",
         url: "http://localhost:8181/userLogin",
@@ -65,23 +66,24 @@ export default {
         if (result.status === 200) {
           let data = result.data;
           if (data.status === 200) {
-            this.$message({
+            _this.$message({
               showClose: true,
               message: "登录成功",
               type: "success",
               duration: "600"
             });
-            this.loginData.account = "";
-            this.loginData.password = "";
-            this.setToken(data.token);
-            this.$store.dispatch("changeUserId",data.userId);
-            this.$store.dispatch("changeRole",data.role);
-            this.$store.dispatch("changeRoleId",data.roleId);
-            this.$store.dispatch("changeAccount",data.account);
-            this.$store.dispatch("changeUserName",data.userName);
-            this.$router.push({ path: "/Index" });
+            _this.loginData.account = "";
+            _this.loginData.password = "";
+            _this.setToken(data.token);
+            console.log(data.role);
+            _this.$store.dispatch("changeUserId",data.userId);
+            _this.$store.dispatch("changeRole",data.role);
+            _this.$store.dispatch("changeRoleId",data.roleId);
+            _this.$store.dispatch("changeAccount",data.account);
+            _this.$store.dispatch("changeUserName",data.userName);
+            _this.$router.push({ path: "/Index" });
           } else {
-            this.$message({
+            _this.$message({
               showClose: true,
               message: "登录失败，原因: " + data.msg,
               type: "error",
@@ -89,7 +91,7 @@ export default {
             });
           }
         } else {
-          this.$message({
+          _this.$message({
             showClose: true,
             message: "登录失败，请联系管理员",
             type: "error",

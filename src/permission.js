@@ -6,7 +6,7 @@ let addRouFlag = false
 
 router.beforeEach((to, from, next) => {
     // 取到用户的角色
-    let GetRole = localStorage.getItem("role")
+    let GetRole = sessionStorage.getItem("role");
     console.log("GetRole")
     console.log(GetRole)
     // 如果登录了
