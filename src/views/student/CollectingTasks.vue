@@ -145,7 +145,7 @@ export default {
     },
     taskDetail() {
       const _this = this;
-      axios.get("http://localhost:8181/studentTask/checkMyTask", {
+      axios.get("http://localhost:8181/task/studentCollectingTask", {
         params: {
           offerId: this.$store.getters.getOfferId,
           account: this.$store.getters.getAccount,
