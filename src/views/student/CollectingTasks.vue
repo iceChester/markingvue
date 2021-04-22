@@ -1,6 +1,6 @@
 <template>
 <div>
-  <el-divider content-position="center"><h2>待完成的作业</h2></el-divider>
+  <el-divider content-position="center"><h2>请及时完成作业喔</h2></el-divider>
   <div style="margin: 50px auto">
     <el-table
         :data="studentTaskData"

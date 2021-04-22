@@ -21,7 +21,10 @@ import TeacherData from "@/views/admin/TeacherData";
 import CourseData from "@/views/admin/CourseData";
 import CollectingTasks from "@/views/student/CollectingTasks";
 import AccomplishTasks from "@/views/student/AccomplishTasks";
-import OverdueTask from "@/views/student/OverdueTask";
+import OverdueTask from "@/views/student/OverdueTasks";
+import GroupAccomplishTasks from "@/views/student/GroupAccomplishTasks";
+import GroupCollectingTasks from "@/views/student/GroupCollectingTasks";
+import GroupOverdueTasks from "@/views/student/GroupOverdueTasks";
 Vue.use(VueRouter)
 
 export const fixedRouter = [
@@ -205,7 +208,7 @@ export const permissionRouter  = [
       roles: ['student'],
       course: 'course'
     },
-    name: "小组",
+    name: "小组和小组作业",
     redirect: "/MyGroup",
     children: [
       {
@@ -213,6 +216,7 @@ export const permissionRouter  = [
         component: MyGroup,
         name: "我的小组",
       },
+
     ]
   },
   {
@@ -230,7 +234,40 @@ export const permissionRouter  = [
         path: "/CourseGroup",
         name: "课程小组",
         component: CourseGroup
-      }
+      },
+      {
+        path: "/GroupAccomplishTasks",
+        component: GroupAccomplishTasks,
+        hidden: true,
+        meta: {
+          roles: ['student'],
+          course: 'null'
+        },
+        show: false,
+        name: "已完成小组作业"
+      },
+      {
+        path: "/GroupCollectingTasks",
+        component: GroupCollectingTasks,
+        hidden: true,
+        meta: {
+          roles: ['student'],
+          course: 'null'
+        },
+        show: false,
+        name: "待小组作业"
+      },
+      {
+        path: "/GroupOverdueTasks",
+        component: GroupOverdueTasks,
+        hidden: true,
+        meta: {
+          roles: ['student'],
+          course: 'null'
+        },
+        show: false,
+        name: "过期作业"
+      },
     ]
   },
   {
@@ -294,7 +331,8 @@ export const permissionRouter  = [
     },
     show: false,
     name: "作业详情"
-  }
+  },
+
 ]
 
 
