@@ -219,6 +219,7 @@ export default {
         params: {
           taskId: this.taskId,
           account: row.account,
+          groupId: -1,
         },
         crossDomain: true,
         responseType: 'blob',
@@ -247,6 +248,7 @@ export default {
       axios.get("http://localhost:8181/studentTask/downloadAllTask",{
         params: {
           taskId: this.taskId,
+          groupId: -1,
         },
         crossDomain: true,
         responseType: 'blob',
@@ -269,7 +271,6 @@ export default {
     },
     setScore(data){
       const testScore = parseInt(data.score);
-      console.log(testScore);
       if(testScore>=0&&testScore<=100){
         if(this.markingType.weight.length==1){
           if(this.markingType.position==1){

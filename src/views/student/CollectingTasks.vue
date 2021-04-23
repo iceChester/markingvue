@@ -89,6 +89,7 @@ export default {
       taskData: {
         account: this.$store.getters.getAccount,
         taskId: '',
+        groupId: '',
       },
     }
   },
@@ -165,6 +166,7 @@ export default {
     handleClick(data) {
       this.dialogVisible = true;
       this.taskData.taskId = data.taskId;
+      this.taskData.groupId = -1;
     },
   }
 }

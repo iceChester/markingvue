@@ -156,6 +156,7 @@ export default {
         params: {
           taskId: row.taskId,
           account: this.$store.getters.getAccount,
+          groupId: this.$store.getters.getGroupId,
         },
         crossDomain: true,
         responseType: 'blob',
@@ -178,7 +179,7 @@ export default {
       })
     },
     deleteClick(data){
-      this.$confirm('此操作将永久删除该次作业文件，需要重新提交, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除小组作业，需要重新提交, 是否继续?', '你最好清楚你在做什么', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -197,6 +198,7 @@ export default {
         params: {
           taskId: data.taskId,
           account: this.$store.getters.getAccount,
+
         },
         crossDomain: true,
         xhrFields: {withCredentials: true},

@@ -178,6 +178,11 @@ export const permissionRouter  = [
         component: StudentInfo,
         name: "学生信息",
       },
+      {
+        path: "/CourseGroup",
+        name: "小组信息",
+        component: CourseGroup
+      },
     ]
   },
   {
@@ -208,32 +213,13 @@ export const permissionRouter  = [
       roles: ['student'],
       course: 'course'
     },
-    name: "小组和小组作业",
+    name: "小组信息",
     redirect: "/MyGroup",
     children: [
       {
         path: "/MyGroup",
         component: MyGroup,
         name: "我的小组",
-      },
-
-    ]
-  },
-  {
-    path: "/CourseGroups",
-    name: "课程小组",
-    component: CourseDetail,
-    hidden: true,
-    redirect: '/CourseGroup',
-    meta: {
-      roles: ['teacher'],
-      course: 'course'
-    },
-    children: [
-      {
-        path: "/CourseGroup",
-        name: "课程小组",
-        component: CourseGroup
       },
       {
         path: "/GroupAccomplishTasks",
@@ -255,7 +241,7 @@ export const permissionRouter  = [
           course: 'null'
         },
         show: false,
-        name: "待小组作业"
+        name: "待完成小组作业"
       },
       {
         path: "/GroupOverdueTasks",
@@ -268,6 +254,7 @@ export const permissionRouter  = [
         show: false,
         name: "过期作业"
       },
+
     ]
   },
   {
@@ -287,7 +274,7 @@ export const permissionRouter  = [
       },
       {
         path: "/CourseTasks",
-        name: "布置的作业",
+        name: "个人作业",
         component: CourseTasks,
       }
     ]
