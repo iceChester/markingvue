@@ -19,12 +19,12 @@
                 active-text-color="#ffd04b"
                 v-bind:router="true"
                 v-bind:default-active="$route.path">
-              <el-submenu v-for="(item,index) in this.meuns" v-bind:index="index" v-if="!item.hidden">
+              <el-submenu v-for="(item,index) in this.meuns" :index="index+''" v-if="!item.hidden">
                 <template slot="title">
                   <i class="el-icon-message"></i>
                   <span slot="title">{{ item.name }}</span>
                 </template>
-                <el-menu-item v-for="(item2,index2) in item.children" v-bind:index="item2.path"
+                <el-menu-item v-for="(item2,index2) in item.children" :index="item2.path"
                               v-bind:class="item2.path==$route.path?'is-active':''">
                   {{ item2.name }}
                 </el-menu-item>

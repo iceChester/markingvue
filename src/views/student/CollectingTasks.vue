@@ -149,6 +149,7 @@ export default {
         params: {
           offerId: this.$store.getters.getOfferId,
           account: this.$store.getters.getAccount,
+          taskType: 0,
         },
         crossDomain: true,
         xhrFields: {withCredentials: true},

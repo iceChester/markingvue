@@ -43,6 +43,7 @@ export default {
   },
   methods: {
     task(index) {
+      index = index+"";
       this.$store.dispatch('changeOfferId',this.option[index].offerId);
       this.$store.dispatch('changeCourseName',this.option[index].courseName);
       this.$router.push({

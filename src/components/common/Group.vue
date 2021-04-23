@@ -1,8 +1,8 @@
 <template>
   <div>
-    <GroupAccomplishTasks v-if="isAccomplishShow" @goBack="goBack"></GroupAccomplishTasks>
+    <GroupAccomplishTasks v-if="isAccomplishShow" @goBack="goBack" :isLeader = "!this.isShowButton"></GroupAccomplishTasks>
     <GroupOverdueTasks v-if="isOverdueShow"@goBack="goBack"></GroupOverdueTasks>
-    <GroupCollectingTasks v-if="isCollectingShow"@goBack="goBack"></GroupCollectingTasks>
+    <GroupCollectingTasks v-if="isCollectingShow"@goBack="goBack" :isLeader = "!this.isShowButton"></GroupCollectingTasks>
     <div v-if="isMemberShow">
       <el-row :gutter="20">
         <el-col :span="8">
@@ -111,6 +111,7 @@ export default {
       this.isMemberShow = true;
     },
     collectingTask(){
+      console.log(this.isShowButton);
       this.isCollectingShow = true;
       this.isAccomplishShow = false;
       this.isOverdueShow = false;
@@ -156,7 +157,6 @@ export default {
           token: this.getToken(),
         }
       }).then(function (resp) {
-        console.log(resp.data)
         if(!resp.data){
           _this.isShowButton = !(_this.isShowButton)
         }

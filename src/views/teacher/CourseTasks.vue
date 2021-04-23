@@ -122,6 +122,7 @@ export default {
       axios.get("http://localhost:8181/task/findCollectingTask/",{
         params: {
           offerId: this.$store.getters.getOfferId,
+          taskType: 0,
         },
         crossDomain: true,
         xhrFields: {withCredentials: true},
@@ -138,6 +139,7 @@ export default {
       axios.get("http://localhost:8181/task/findDeadlineTask/",{
         params: {
           offerId: this.$store.getters.getOfferId,
+          taskType: 0,
         },
         crossDomain: true,
         xhrFields: {withCredentials: true},
