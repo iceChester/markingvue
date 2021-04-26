@@ -14,6 +14,15 @@
       <div slot="header" class="clearfix">
         <span>小组名称：{{item.groupName}}</span>
         <span style="float: right">
+          <span>统一分数：</span>
+           <el-input
+               v-model="item.groupScore"
+               size="normal"
+               type="number"
+               placeholder="输入分数"
+               @change="changeGroupScore(item)"
+               style="width: 125px;height: 20px;margin-left: 10px;margin-right: 10px"
+           />
           <el-button size="mini" type="primary"  @click="downloadOne(item)">下载作业</el-button>
           <el-button size="mini" @click="openDrawer(item.studentTaskList[0])" type="primary" style="margin-left: 16px;">查看</el-button>
         </span>
@@ -76,7 +85,7 @@
         <el-table-column
             width="160"
             fixed="right"
-            label="评分"
+            label="单独评分"
             v-if="isMarkingShow">
           <template slot-scope="scope">
             <el-input
@@ -159,20 +168,26 @@ export default {
       offerId: this.$store.getters.getOfferId,
       taskId: this.$store.getters.getTaskId,
       title: this.$store.getters.getTaskTitle,
-      tableData: [{
-        studentName: '',
-        className: '',
-        account: '',
-        scoreOne: '',
-        scoreTwo: '',
-        scoreThree: '',
-        scoreTotal: '',
-        fileName: [],
-        submitDate: '',
-        score: '',
-        groupId: '',
-      }],
-      taskData: [],
+      taskData: [
+        {
+          studentTaskList: [
+            {
+              studentName: '',
+              className: '',
+              account: '',
+              scoreOne: '',
+              scoreTwo: '',
+              scoreThree: '',
+              scoreTotal: '',
+              fileName: [],
+              submitDate: '',
+              score: '',
+              groupId: '',
+            }
+          ],
+          groupScore: 100,
+        }
+      ],
     }
   },
   created(){
@@ -263,6 +278,14 @@ export default {
         _this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
           loadingInstance.close();
         });
+      })
+    },
+    changeGroupScore(data){
+      const groupData = data.groupScore;
+      console.log(data.groupScore)
+      data.studentTaskList.forEach(element => {
+        element.score = groupData;
+        this.setScore(element);
       })
     },
     setScore(data){
