@@ -5,13 +5,13 @@
 <script>
 import TeacherTasks from "@/components/common/TeacherTasks";
 export default {
-  name: "CourseTasks",
+  name: "GroupTasks",
   components: {
     TeacherTasks,
   },
   data() {
     return {
-      taskType: 0,
+      taskType: 1,
     }
   },
 }

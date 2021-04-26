@@ -92,7 +92,7 @@ export default {
         title: '',
         taskType: 0,
         markingType: 0,
-        deadline: '',
+        deadline: new Date(),
         detail: '',
         offerId: '',
         markingAccount: '',
@@ -127,7 +127,7 @@ export default {
           { required: true, message: '请选择作业类型', trigger: 'change' }
         ],
         deadline: [
-          { type: 'date', required: true, message: '请选择截至日期', trigger: 'change' }
+          { required: true, message: '请选择截至日期', trigger: 'change' }
         ],
         weight: [
           { required: true, message: '输入权重', trigger: 'change' },
@@ -177,6 +177,7 @@ export default {
           }
         });
       }else{
+        console.log(this.taskForm)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             const _this = this;

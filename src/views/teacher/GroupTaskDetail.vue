@@ -1,20 +1,28 @@
 <template>
-  <div>
-    <div style="margin: 30px auto; text-align: center">
-        <h1>作业详情</h1>
-    </div>
-    <el-divider></el-divider>
-    <el-page-header @back="goBack" content="详情页面"></el-page-header>
-    <el-row :gutter="20" style="margin-top: 30px">
-      <el-col :span="12"><Bar ref="bar" :barData = this.barData :xData = this.xData v-if="isBarShow"></Bar> </el-col>
-      <el-col :span="12"><Pie ref="pie" :pieData = this.pieData v-if="isPieShow"></Pie> </el-col>
-    </el-row>
-    <div>
+<div>
+  <div style="margin: 30px auto; text-align: center">
+    <h1>作业详情</h1>
+  </div>
+  <el-divider></el-divider>
+  <el-page-header @back="goBack" content="详情页面"></el-page-header>
+  <div style="margin-top: 20px">
+    <el-button type="primary" @click="toExcel" size="mini"  style="padding-right: 5%;margin-left: 42%">导出表格</el-button>
+    <el-button type="primary" @click="downloadAllTask" size="mini"  style="padding-right: 5%;">下载所有作业</el-button>
+  </div>
+  <div style="width: 90% ;margin: 0 auto;height:880px;overflow: auto">
+    <el-card class="taskCard" v-for="(item,index) in taskData">
+      <div slot="header" class="clearfix">
+        <span>小组名称：{{item.groupName}}</span>
+        <span style="float: right">
+          <el-button size="mini" type="primary"  @click="downloadOne(item)">下载作业</el-button>
+          <el-button size="mini" @click="openDrawer(item.studentTaskList[0])" type="primary" style="margin-left: 16px;">查看</el-button>
+        </span>
+      </div>
       <el-table
-          :data="tableData"
-          height="280"
+          :data="item.studentTaskList"
+          height="480"
           border
-          style="width: 90% ;margin: 0 auto">
+          >
         <el-table-column fixed label="序号" width="50" align="center">
           <template scope="scope">
             <span>
@@ -75,84 +83,64 @@
                 v-model="scope.row.score"
                 size="normal"
                 type="number"
-                placeholder="输入分数" style="height: 80%;width: 90%"
+                placeholder="输入分数"
                 @change="setScore(scope.row)"
-                :max="1"/>
-<!--            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)" style="margin-left: 10%">确定</el-button>-->
-          </template>
-        </el-table-column>
-        <el-table-column width="240" fixed="right">
-          <template slot="header" slot-scope="scope">
-            <el-button type="primary" @click="toExcel" size="mini"  style="padding-right: 5%;">导出表格</el-button>
-            <el-button type="primary" @click="downloadAllTask" size="mini"  style="padding-right: 5%;">下载所有作业</el-button>
-          </template>
-          <template slot-scope="scope">
-            <el-button size="mini" type="primary"  @click="downloadOne(scope.row)">下载作业</el-button>
-            <el-button size="mini" @click="openDrawer(scope.row)" type="primary" style="margin-left: 16px;">查看</el-button>
+                />
+            <!--            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)" style="margin-left: 10%">确定</el-button>-->
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-          background
-          layout="prev, pager, next"
-          :page-size=pageSize
-          :total=total
-          @current-change="newPage"
-          style="overflow: auto;float: right;padding-right: 5%;padding-top: 20px">
-      </el-pagination>
-    </div>
-    <div>
-      <el-drawer
-          title="xxx的作业"
-          :visible.sync="drawer"
-          :before-close="handleClose"
-          size="50%"
-          style="overflow: auto"
-          >
-        <div>
-          <el-button @click="openInnerDrawer">其他文件!</el-button>
-          <el-drawer
-              title="我是里面的"
-              :append-to-body="true"
-              :before-close="handleClose"
-              :visible.sync="innerDrawer">
-            <p>_(:зゝ∠)_</p>
-          </el-drawer>
-        </div>
-        <div style="height: 45%" v-if="isImgShow">
-          <el-carousel :interval="4000" type="card">
-            <el-carousel-item v-for="item in this.imgSrc" :key="item">
-              <el-image :src="item" class="image"/>
-            </el-carousel-item>
-          </el-carousel>
-          <div >
-            <el-button @click="this.showBigImg"  style="margin: 20px 50%">预览</el-button>
-            <el-image-viewer
-                v-if="showViewer"
-                :on-close="()=>{showViewer=false}"
-                :url-list="this.imgSrc" />
-          </div>
-        </div>
-        <div style="width: 75%;margin: 30px auto;height: 45%" v-show="isVideoShow">
-          <Video ref="video" :videoSrc = "this.videoSrc"></Video>
-        </div>
-      </el-drawer>
-    </div>
+    </el-card>
   </div>
+  <div>
+    <el-drawer
+        title="xxx的作业"
+        :visible.sync="drawer"
+        :before-close="handleClose"
+        size="50%"
+        style="overflow: auto"
+    >
+      <div>
+        <el-button @click="openInnerDrawer">其他文件!</el-button>
+        <el-drawer
+            title="我是里面的"
+            :append-to-body="true"
+            :before-close="handleClose"
+            :visible.sync="innerDrawer">
+          <p>_(:зゝ∠)_</p>
+        </el-drawer>
+      </div>
+      <div style="height: 45%" v-if="isImgShow">
+        <el-carousel :interval="4000" type="card">
+          <el-carousel-item v-for="item in this.imgSrc" :key="item">
+            <el-image :src="item" class="image"/>
+          </el-carousel-item>
+        </el-carousel>
+        <div >
+          <el-button @click="this.showBigImg"  style="margin: 20px 50%">预览</el-button>
+          <el-image-viewer
+              v-if="showViewer"
+              :on-close="()=>{showViewer=false}"
+              :url-list="this.imgSrc" />
+        </div>
+      </div>
+      <div style="width: 75%;margin: 30px auto;height: 45%" v-show="isVideoShow">
+        <Video ref="video" :videoSrc = "this.videoSrc"></Video>
+      </div>
+    </el-drawer>
+  </div>
+</div>
 </template>
 
 <script>
-
-import Pie from '../../components/e-charts/pie.vue'
-import Bar from '../../components/e-charts/bar.vue'
 import Video from '../../components/common/VideoPlay.vue'
 import { Loading } from 'element-ui';
 export default {
-  name: "TaskDetail",
+  name: "GroupTaskDetail",
   components: {
-    Pie,Bar,Video,'el-image-viewer':()=>import('element-ui/packages/image/src/image-viewer')
+    Video,'el-image-viewer':()=>import('element-ui/packages/image/src/image-viewer')
   },
-  data() {
+  data(){
     return {
       videoSrc: '',
       showViewer: false,
@@ -161,22 +149,12 @@ export default {
       isImgShow: false,
       isVideoShow: false,
       isMarkingShow: false,
-      isBarShow: false,
-      isPieShow: false,
       markingType: {
         position: '',
         weight: [],
       },
-      pageSize: 10,
-      total: null,
       drawer: false,
       innerDrawer: false,
-      barData: [0, 0, 0, 0, 0, 0],
-      xData: ['0~20', '20~40', '40~60', '60~80', '80~100',"未批改"],
-      pieData:[          // 数据数组，name 为数据项名称，value 为数据项值
-        {value:0, name:'已完成'},
-        {value:100, name:'未完成'},
-      ],
       show: false,
       offerId: this.$store.getters.getOfferId,
       taskId: this.$store.getters.getTaskId,
@@ -192,23 +170,43 @@ export default {
         fileName: [],
         submitDate: '',
         score: '',
+        groupId: '',
       }],
+      taskData: [],
     }
   },
-  created() {
-    this.title = this.$route.query.title;
-    // this.$store.dispatch("changeOfferId",this.$route.query.offerId);
-
-  },
-  mounted(){
-    // 在通过mounted调用即可
+  created(){
     this.groupDetail();
-    this.getBarData();
-    this.getPieData();
     this.checkMarking();
   },
   methods: {
-    downloadOne(row){
+    toExcel(){
+      axios.get("http://localhost:8181/studentTask/export/", {
+        params: {
+          taskId: this.taskId,
+        },
+        crossDomain: true,
+        responseType: 'blob',
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        const blob = new Blob([resp.data], {type: 'application/vnd.ms-excel'})
+        let filename = '成绩单.xls'
+        // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
+        const elink = document.createElement('a')
+        elink.download = filename
+        elink.style.display = 'none'
+        elink.href = URL.createObjectURL(blob)
+        document.body.appendChild(elink)
+        elink.click()
+        URL.revokeObjectURL(elink.href) // 释放URL 对象
+
+      })
+    },
+    downloadOne(item){
+      const row = item.studentTaskList[0];
       let loadingInstance = Loading.service({
         text: "压缩文件中，请稍等。"
       });
@@ -217,7 +215,7 @@ export default {
         params: {
           taskId: this.taskId,
           account: row.account,
-          groupId: -1,
+          groupId: row.groupId,
         },
         crossDomain: true,
         responseType: 'blob',
@@ -230,7 +228,7 @@ export default {
         let url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");//创建a标签
         link.href=url;
-        link.download = row.studentName+"_"+row.account+"_"+_this.title;//重命名文件
+        link.download = item.groupName;//重命名文件
         link.click();
         URL.revokeObjectURL(url);
         _this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
@@ -246,7 +244,7 @@ export default {
       axios.get("http://localhost:8181/studentTask/downloadAllTask",{
         params: {
           taskId: this.taskId,
-          groupId: -1,
+          groupId: 0,
         },
         crossDomain: true,
         responseType: 'blob',
@@ -259,7 +257,7 @@ export default {
         let url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");//创建a标签
         link.href=url;
-        link.download = _this.title;//重命名文件
+        link.download = "小组作业";//重命名文件
         link.click();
         URL.revokeObjectURL(url);
         _this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
@@ -362,8 +360,8 @@ export default {
           token: this.getToken(),
         }
       }).then(function (resp) {
-         _this.markingType = resp.data;
-         console.log(_this.markingType.position)
+        _this.markingType = resp.data;
+        console.log(_this.markingType.position)
         if(_this.markingType.position==4){
           _this.isMarkingShow = false;
         }else{
@@ -371,11 +369,11 @@ export default {
         }
       })
     },
-    getPieData(){
+    groupDetail() {
       const _this = this;
-      axios.get("http://localhost:8181/studentTask/pieData/", {
+      axios.get("http://localhost:8181/studentTask/groupTaskList/", {
         params: {
-          taskId: this.$store.getters.getTaskId,
+          taskId: this.taskId,
           offerId: this.$store.getters.getOfferId,
         },
         crossDomain: true,
@@ -384,96 +382,16 @@ export default {
           token: this.getToken(),
         }
       }).then(function (resp) {
-        console.log(resp);
-        _this.pieData[0].value = resp.data[0];
-        _this.pieData[1].value = resp.data[1];
-        _this.isPieShow = true;
-      })
-    },
-    getBarData(){
-      const _this = this;
-      axios.get("http://localhost:8181/studentTask/barData/", {
-        params: {
-          taskId: this.taskId,
-        },
-        crossDomain: true,
-        xhrFields: {withCredentials: true},
-        headers: {
-          token: this.getToken(),
-        }
-      }).then(function (resp) {
-        _this.barData = resp.data;
-        _this.isBarShow = true;
-      })
-    },
-    toExcel(){
-      axios.get("http://localhost:8181/studentTask/export/", {
-        params: {
-          taskId: this.taskId,
-        },
-        crossDomain: true,
-        responseType: 'blob',
-        xhrFields: {withCredentials: true},
-        headers: {
-          token: this.getToken(),
-        }
-      }).then(function (resp) {
-        const blob = new Blob([resp.data], {type: 'application/vnd.ms-excel'})
-        let filename = '成绩单.xls'
-        // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
-        const elink = document.createElement('a')
-        elink.download = filename
-        elink.style.display = 'none'
-        elink.href = URL.createObjectURL(blob)
-        document.body.appendChild(elink)
-        elink.click()
-        URL.revokeObjectURL(elink.href) // 释放URL 对象
-
-      })
-    },
-    newPage(currentPage){
-      const _this = this;
-      axios.get("http://localhost:8181/studentTask/courseTaskList/", {
-        params: {
-          taskId: this.taskId,
-          page: currentPage,
-          size: this.pageSize,
-        },
-        crossDomain: true,
-        xhrFields: {withCredentials: true},
-        headers: {
-          token: this.getToken(),
-        }
-      }).then(function (resp) {
-        _this.tableData = resp.data.records;
-        _this.total = resp.data.total;
-      })
-    },
-    groupDetail() {
-      const _this = this;
-      axios.get("http://localhost:8181/studentTask/courseTaskList/", {
-        params: {
-          taskId: this.taskId,
-          page: 1,
-          size: this.pageSize,
-        },
-        crossDomain: true,
-        xhrFields: {withCredentials: true},
-        headers: {
-          token: this.getToken(),
-        }
-      }).then(function (resp) {
         console.log(resp.data);
-        _this.tableData = resp.data.records;
-        _this.total = resp.data.total;
+        _this.taskData = resp.data;
+
       })
     },
     goBack(){
       this.$router.push({
-        path: "/CourseTasks"
+        path: "/GroupTasks"
       })
     },
-
     handleClose(done) {
       this.$confirm('确认关闭？')
           .then(_ => {
@@ -490,7 +408,7 @@ export default {
       this.isVideoShow = false;
     },
     openDrawer(row) {
-      let path = "studentTask/"+this.$store.getters.getOfferId+"/" + "个人作业" + "/" +this.taskId + "/" + row.account + "/";
+      let path = "studentTask/"+this.$store.getters.getOfferId+"/" + "小组作业" + "/" +this.taskId + "/" + row.groupId + "/";
       let videoName = row.videoFile.split(",")
       let imgName = row.imgFile.split(",")
       console.log(videoName)
@@ -519,6 +437,9 @@ export default {
 </script>
 
 <style scoped>
+.taskCard{
+  margin-top: 50px;
+}
 /deep/.el-table th > .cell {
   text-align: center;
 }

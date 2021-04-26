@@ -171,7 +171,7 @@ const actions = {
     sessionStorage.taskId = taskId;
   },
   changeTaskTitle(context,taskTitle){
-    context.commit('taskTitle',taskTitle)
+    context.commit('setTaskTitle',taskTitle)
     sessionStorage.taskTitle = taskTitle;
   }
 }

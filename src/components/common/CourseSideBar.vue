@@ -5,7 +5,7 @@
     <el-menu v-bind:router="true" v-bind:default-active="$route.path" :collapse="isCollapse"
              class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" mode="vertical"
              background-color="#545c64" active-text-color="#ffd04b" text-color="#fff">
-      <el-submenu v-for="(item,index) in this.menus" v-bind:index="index" v-if="item.meta.course==='course'">
+      <el-submenu v-for="(item,index) in this.menus" v-bind:index="index" v-if="item.meta.course==='course'" >
         <template slot="title">
           <i class="el-icon-message"></i>
           <span slot="title">{{ item.name }}</span>

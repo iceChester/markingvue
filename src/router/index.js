@@ -25,6 +25,8 @@ import OverdueTask from "@/views/student/OverdueTasks";
 import GroupAccomplishTasks from "@/views/student/GroupAccomplishTasks";
 import GroupCollectingTasks from "@/views/student/GroupCollectingTasks";
 import GroupOverdueTasks from "@/views/student/GroupOverdueTasks";
+import GroupTasks from "@/views/teacher/GroupTasks";
+import GroupTaskDetail from "@/views/teacher/GroupTaskDetail";
 Vue.use(VueRouter)
 
 export const fixedRouter = [
@@ -221,40 +223,6 @@ export const permissionRouter  = [
         component: MyGroup,
         name: "我的小组",
       },
-      {
-        path: "/GroupAccomplishTasks",
-        component: GroupAccomplishTasks,
-        hidden: true,
-        meta: {
-          roles: ['student'],
-          course: 'null'
-        },
-        show: false,
-        name: "已完成小组作业"
-      },
-      {
-        path: "/GroupCollectingTasks",
-        component: GroupCollectingTasks,
-        hidden: true,
-        meta: {
-          roles: ['student'],
-          course: 'null'
-        },
-        show: false,
-        name: "待完成小组作业"
-      },
-      {
-        path: "/GroupOverdueTasks",
-        component: GroupOverdueTasks,
-        hidden: true,
-        meta: {
-          roles: ['student'],
-          course: 'null'
-        },
-        show: false,
-        name: "过期作业"
-      },
-
     ]
   },
   {
@@ -276,6 +244,11 @@ export const permissionRouter  = [
         path: "/CourseTasks",
         name: "个人作业",
         component: CourseTasks,
+      },
+      {
+        path: "/GroupTasks",
+        name: "小组作业",
+        component: GroupTasks,
       }
     ]
   },
@@ -318,6 +291,50 @@ export const permissionRouter  = [
     },
     show: false,
     name: "作业详情"
+  },
+  {
+    path: "/GroupTaskDetail",
+    component: GroupTaskDetail,
+    hidden: true,
+    meta: {
+      roles: ['teacher'],
+      course: 'null'
+    },
+    show: false,
+    name: "小组作业详情"
+  },
+  {
+    path: "/GroupAccomplishTasks",
+    component: GroupAccomplishTasks,
+    hidden: true,
+    meta: {
+      roles: ['student'],
+      course: 'null'
+    },
+    show: false,
+    name: "已完成小组作业"
+  },
+  {
+    path: "/GroupCollectingTasks",
+    component: GroupCollectingTasks,
+    hidden: true,
+    meta: {
+      roles: ['student'],
+      course: 'null'
+    },
+    show: false,
+    name: "待完成小组作业"
+  },
+  {
+    path: "/GroupOverdueTasks",
+    component: GroupOverdueTasks,
+    hidden: true,
+    meta: {
+      roles: ['student'],
+      course: 'null'
+    },
+    show: false,
+    name: "过期作业"
   },
 
 ]
