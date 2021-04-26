@@ -4,32 +4,37 @@
     <h1>作业详情</h1>
   </div>
   <el-divider></el-divider>
-  <el-page-header @back="goBack" content="详情页面"></el-page-header>
+  <el-page-header @back="goBack" content="详情页面" style="margin-left: 35px"></el-page-header>
   <div style="margin-top: 20px">
     <el-button type="primary" @click="toExcel" size="mini"  style="padding-right: 5%;margin-left: 42%">导出表格</el-button>
     <el-button type="primary" @click="downloadAllTask" size="mini"  style="padding-right: 5%;">下载所有作业</el-button>
   </div>
-  <div style="width: 90% ;margin: 0 auto;height:880px;overflow: auto">
+  <div style="width: 90% ;margin: 0 auto;height:900px;overflow: auto">
     <el-card class="taskCard" v-for="(item,index) in taskData">
       <div slot="header" class="clearfix">
         <span>小组名称：{{item.groupName}}</span>
         <span style="float: right">
-          <span>统一分数：</span>
-           <el-input
-               v-model="item.groupScore"
-               size="normal"
-               type="number"
-               placeholder="输入分数"
-               @change="changeGroupScore(item)"
-               style="width: 125px;height: 20px;margin-left: 10px;margin-right: 10px"
-           />
+          <span v-if="isMarkingShow">
+            <span>统一分数：</span>
+            <el-tooltip placement="top">
+              <div slot="content">评分权重为：{{markingType.weight}}%<br/>您的权重为：{{markingType.weight[markingType.position-1]}}%</div>
+              <el-input
+                  v-model="item.groupScore"
+                  size="normal"
+                  type="number"
+                  placeholder="输入分数"
+                  @change="changeGroupScore(item)"
+                  style="width: 125px;height: 20px;margin-left: 10px;margin-right: 10px"
+              />
+            </el-tooltip>
+          </span>
           <el-button size="mini" type="primary"  @click="downloadOne(item)">下载作业</el-button>
           <el-button size="mini" @click="openDrawer(item.studentTaskList[0])" type="primary" style="margin-left: 16px;">查看</el-button>
         </span>
       </div>
       <el-table
           :data="item.studentTaskList"
-          height="480"
+          height="420"
           border
           >
         <el-table-column fixed label="序号" width="50" align="center">
@@ -95,7 +100,6 @@
                 placeholder="输入分数"
                 @change="setScore(scope.row)"
                 />
-            <!--            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)" style="margin-left: 10%">确定</el-button>-->
           </template>
         </el-table-column>
       </el-table>

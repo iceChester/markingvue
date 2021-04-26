@@ -1,10 +1,16 @@
 <template>
 <div>
+  <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 15%">移除所选同学</el-button>
   <el-table
       :data="tableData"
       height="580"
       border
-      style="width: 80%">
+      style="width: 80%;margin: 20px auto"
+      @selection-change="handleSelectionChange">
+    <el-table-column
+        type="selection"
+        width="55">
+    </el-table-column>
     <el-table-column fixed label="序号" width="50" align="center">
       <template scope="scope">
         <span>
@@ -45,7 +51,8 @@
       layout="prev, pager, next"
       :page-size=pageSize
       :total=total
-      @current-change="newPage">
+      @current-change="newPage"
+  style="margin: 20px 42%">
   </el-pagination>
 </div>
 </template>
@@ -60,6 +67,7 @@ export default {
         pageSize: 10,
         total: null,
         offerId: '',
+        multipleSelection: [],
         tableData: [{
           studentName: '',
           className: '',
@@ -90,6 +98,48 @@ export default {
     })
   },
   methods: {
+    deleteSelection(){
+      this.$confirm('确认将所选同学移除本门课程吗？')
+          .then(_ => {
+            this.deleteStudentList();
+          })
+          .catch(_ => {});
+    },
+    deleteStudentList(){
+      let accountList = "";
+      this.multipleSelection.forEach(element => {
+        accountList = accountList + element.account + ",";
+      })
+      const _this = this;
+      axios.delete("http://localhost:8181/timetable/deleteList",{
+        params: {
+          accountList: accountList,
+          offerId: this.offerId,
+        },
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        if(resp.data){
+          _this.$message({
+            type: 'info',
+            message: "移除成功"
+          });
+          this.reload();
+        }else {
+          _this.$message({
+            type: 'warning',
+            message: "移除失败"
+          });
+        }
+
+      })
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     handleOpen(data){
       this.$confirm('确认将该同学移除本门课程吗？')
           .then(_ => {

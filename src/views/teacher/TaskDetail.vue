@@ -71,13 +71,17 @@
             label="评分"
             v-if="isMarkingShow">
           <template slot-scope="scope">
-            <el-input
-                v-model="scope.row.score"
-                size="normal"
-                type="number"
-                placeholder="输入分数" style="height: 80%;width: 90%"
-                @change="setScore(scope.row)"
-                :max="1"/>
+            <el-tooltip placement="top">
+              <div slot="content">评分权重为：{{markingType.weight}}%<br/>您的权重为：{{markingType.weight[markingType.position-1]}}%</div>
+              <el-input
+                  v-model="scope.row.score"
+                  size="normal"
+                  type="number"
+                  placeholder="输入分数" style="height: 80%;width: 90%"
+                  @change="setScore(scope.row)"
+                  />
+            </el-tooltip>
+
 <!--            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)" style="margin-left: 10%">确定</el-button>-->
           </template>
         </el-table-column>
@@ -167,6 +171,7 @@ export default {
         position: '',
         weight: [],
       },
+      weight: "",
       pageSize: 10,
       total: null,
       drawer: false,

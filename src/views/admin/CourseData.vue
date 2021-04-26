@@ -33,11 +33,17 @@
       </div></el-col>
     </el-row>
     <div>
+      <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 8%">移除所选课程</el-button>
       <el-table
           :data="tableData"
           height="580"
           border
-          style="width: 80%;margin-left: 8%">
+          style="width: 80%;margin-left: 8%"
+          @selection-change="handleSelectionChange">
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
         <el-table-column
             label="编号"
             prop="courseId">
@@ -69,6 +75,7 @@
 </template>
 
 <script>
+import qs from 'qs';
 export default {
   name: "CourseData",
   data() {
@@ -86,8 +93,9 @@ export default {
       tableData: [{
         courseName: '',
         courseId: '',
-      },
-      ]
+        },
+      ],
+      multipleSelection: [],
     }
   },
   created() {
@@ -109,6 +117,47 @@ export default {
     })
   },
   methods: {
+    deleteCourseList(){
+      let courseIdList = "";
+      this.multipleSelection.forEach(element => {
+        courseIdList = courseIdList + element.courseId + ",";
+      });
+      console.log(courseIdList);
+      const _this = this;
+      axios.delete("http://localhost:8181/course/deleteList",{
+        params: {
+          courseIdList : courseIdList,
+        },
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        if(resp.data){
+          _this.$message({
+            type: 'info',
+            message: "删除成功"
+          });
+          _this.$router.go(0);
+        }else {
+          _this.$message({
+            type: 'warning',
+            message: "删除失败"
+          });
+        }
+      })
+    },
+    deleteSelection(){
+      this.$confirm('确认移除所选课程吗？')
+          .then(_ => {
+            this.deleteCourseList();
+          })
+          .catch(_ => {});
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     toExcel(){
       axios.get("http://localhost:8181/course/export/", {
         params: {

@@ -2,10 +2,10 @@
   <div style="height: 100%">
     <el-container>
       <NavBar ref="navBar" :routes="getRoutes"></NavBar>
-      <el-main>
+      <el-main >
         <router-view/>
       </el-main>
-      <el-footer style="margin-top: 350px">@By XiaoMao</el-footer>
+      <el-footer ></el-footer>
     </el-container>
   </div>
 </template>
