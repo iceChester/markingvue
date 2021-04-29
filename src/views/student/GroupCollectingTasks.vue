@@ -37,6 +37,7 @@
         >
           <template slot-scope="scope">
             <el-button @click.stop="handleClick(scope.row)" type="text" size="small" v-if="isLeader">提交作业</el-button>
+            <el-button @click.stop="downloadAttachment(scope.row)" type="text" size="small" v-if="scope.row.attachment.length>0">下载附件</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -71,6 +72,7 @@
 </template>
 
 <script>
+import { Loading } from 'element-ui';
 export default {
   name: "GroupCollectingTasks",
   inject: ['reload'],
@@ -81,7 +83,6 @@ export default {
   },
   data() {
     return {
-
       dialogVisible: false,
       studentTaskData: [],
       fileList: [],
@@ -108,6 +109,35 @@ export default {
     console.log(sessionStorage.getItem("leader"));
   },
   methods: {
+    downloadAttachment(row){
+      let loadingInstance = Loading.service({
+        text: "压缩文件中，请稍等。"
+      });
+      const _this = this;
+      axios.get("http://localhost:8181/task/downloadAttachment",{
+        params: {
+          taskId: row.taskId,
+        },
+        crossDomain: true,
+        responseType: 'blob',
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        console.log(row);
+        let blob = new Blob([resp.data],{type:"application/zip"});
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");//创建a标签
+        link.href=url;
+        link.download = row.title+"_作业附件";//重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+        _this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+          loadingInstance.close();
+        });
+      })
+    },
     goBack(){
       this.$emit("goBack");
     },httpRequest(param) {

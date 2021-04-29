@@ -34,6 +34,7 @@
       >
         <template slot-scope="scope">
           <el-button @click.stop="handleClick(scope.row)" type="text" size="small">提交作业</el-button>
+          <el-button @click.stop="downloadAttachment(scope.row)" type="text" size="small" v-if="scope.row.attachment.length>0">下载附件</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -68,6 +69,7 @@
 </template>
 
 <script>
+import { Loading } from 'element-ui';
 export default {
   name: "CollectingTasks",
   inject: ['reload'],
@@ -98,6 +100,35 @@ export default {
     this.taskDetail();
   },
   methods: {
+    downloadAttachment(row){
+      let loadingInstance = Loading.service({
+        text: "压缩文件中，请稍等。"
+      });
+      const _this = this;
+      axios.get("http://localhost:8181/task/downloadAttachment",{
+        params: {
+          taskId: row.taskId,
+        },
+        crossDomain: true,
+        responseType: 'blob',
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        console.log(row);
+        let blob = new Blob([resp.data],{type:"application/zip"});
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");//创建a标签
+        link.href=url;
+        link.download = row.title+"_作业附件";//重命名文件
+        link.click();
+        URL.revokeObjectURL(url);
+        _this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+          loadingInstance.close();
+        });
+      })
+    },
     httpRequest(param) {
       //this.file.push(param.file);// 需要上传多个文件，为避免发送多次请求，因此在这里只进行文件的获取，param可以拿到文件上传的所有信息
       this.newData.append('file', param.file);

@@ -1,14 +1,14 @@
 <template>
   <div style="margin: 30px 8%">
     <div style="margin: 30px auto; text-align: center">
-      <h1>课程信息</h1>
+      <h1>课程目标信息</h1>
     </div>
     <el-divider></el-divider>
     <el-row :gutter="20" style="margin-bottom: 20px">
       <el-col :span="2" style="margin-left: 8%"><div>
         <el-upload
             class="upload-demo"
-            action="http://localhost:8181/course/importExcel/"
+            action="http://localhost:8181/courseObjective/importExcel/"
             accept=".xls,.xlsx"
             :headers="this.headers"
             :on-preview="handlePreview"
@@ -24,16 +24,16 @@
         </el-upload>
       </div></el-col>
       <el-col :span="2" style="float: left"><div>
-        <el-link :underline="false" :href="fileUrl" download="课程信息模板.xls" >
-          <el-button size="small" type="primary" @click="downTemplate">课程信息模板下载</el-button>
+        <el-link :underline="false" :href="fileUrl" download="课程目标信息模板.xls" >
+          <el-button size="small" type="primary" @click="downTemplate">课程目标信息模板下载</el-button>
         </el-link>
       </div></el-col>
       <el-col :span="2" style="float: right;margin-right: 10%"><div>
-        <el-button type="primary" @click="toExcel"size="small" >导出表格</el-button>
+        <el-button type="primary" @click="toExcel"size="small" >导出课程目标数据</el-button>
       </div></el-col>
     </el-row>
     <div>
-      <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 8%">移除所选课程</el-button>
+      <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 8%">移除所选课程目标</el-button>
       <el-table
           :data="tableData"
           height="580"
@@ -45,12 +45,12 @@
             width="55">
         </el-table-column>
         <el-table-column
-            label="编号"
-            prop="courseId">
+            label="课程目标编号"
+            prop="objectiveId">
         </el-table-column>
         <el-table-column
-            label="课程名称"
-            prop="courseName">
+            label="课程目标内容"
+            prop="objectiveContent">
         </el-table-column>
         <el-table-column
             align="right">
@@ -58,81 +58,27 @@
             <el-button
                 size="mini"
                 type="danger"
-                @click="handleOpen(scope.row)">删除课程</el-button>
-            <el-button
-                size="mini"
-                type="primary"
-                @click="drawerOpen(scope.row)">添加课程目标</el-button>
+                @click="handleOpen(scope.row)">删除课程目标</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-      <el-pagination
-          background
-          layout="prev, pager, next"
-          :page-size=pageSize
-          :total=total
-          @current-change="newPage"
-          style="margin: 20px 42%">
-      </el-pagination>
-    <el-drawer
-        title="为课程添加目标"
-        :visible.sync="drawer"
-        size="42%"
-        :before-close="drawerClose">
-      <div>
-        <el-table
-            :data="ObjectiveData"
-            height="580"
-            border
-            style="width: 80%;margin-left: 8%"
-            @selection-change="handleSelectionChange">
-          <el-table-column
-              type="selection"
-              width="55">
-          </el-table-column>
-          <el-table-column
-              label="课程目标编号"
-              prop="objectiveId">
-          </el-table-column>
-          <el-table-column
-              label="课程目标内容"
-              prop="objectiveContent">
-          </el-table-column>
-          <el-table-column
-              align="right">
-            <template slot="header" slot-scope="scope">
-              <el-input
-                  v-model="keyWord"
-                  size="mini"
-                  placeholder="输入关键字搜索"
-                  @change="likeName"
-              />
-            </template>
-            <template slot-scope="scope">
-              <el-button
-                  size="mini"
-                  type="danger"
-                  @click="addObjective(scope.row)">添加课程目标</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-drawer>
+    <el-pagination
+        background
+        layout="prev, pager, next"
+        :page-size=pageSize
+        :total=total
+        @current-change="newPage"
+        style="margin: 20px 42%">
+    </el-pagination>
   </div>
 </template>
 
 <script>
 export default {
-  name: "CourseData",
+  name: "CourseObjectiveData",
   data() {
     return {
-      ObjectiveData: [{
-        objectiveContent: '',
-        objectiveId: '',
-      }],
-      course: '',
-      drawer: false,
       show: false,
       headers: {
         token: this.getToken()
@@ -144,17 +90,16 @@ export default {
       fileUrl: '',
       fileList:[],
       tableData: [{
-        courseName: '',
-        courseId: '',
-        },
-      ],
+        objectiveContent: '',
+        objectiveId: '',
+      }],
       multipleSelection: [],
     }
   },
   created() {
     const _this = this;
     console.log(this.offerId)
-    axios.get("http://localhost:8181/course/findAll/",{
+    axios.get("http://localhost:8181/courseObjective/findAll/",{
       params: {
         page: 1,
         size: this.pageSize,
@@ -170,76 +115,13 @@ export default {
     })
   },
   methods: {
-    addObjective(row){
-        const _this = this;
-        this.course.courseObjectives = row.objectiveId;
-        axios.post("http://localhost:8181/course/addObjective",this.course,{
-          crossDomain: true,
-          xhrFields: {withCredentials: true},
-          headers: {
-            token: this.getToken(),
-          }
-        }).then(function (resp) {
-          const h = _this.$createElement;
-          if(resp.data){
-            _this.$notify({
-              title: '添加成功',
-              message: h('i', { style: 'color: teal'}, row.objectiveContent)
-            });
-          }else {
-            _this.$notify({
-              title: '失败',
-              message: h('i', { style: 'color: teal'}, '很遗憾，添加失败，请重试')
-            });
-          }
-        })
-    },
-    likeName(){
-      const _this = this;
-      axios.get("http://localhost:8181/courseObjective/likeByName",{
-        params: {
-          keyWord: this.keyWord,
-        },
-        crossDomain: true,
-        xhrFields: {withCredentials: true},
-        headers: {
-          token: this.getToken(),
-        }
-      }).then(function (resp) {
-        _this.ObjectiveData = resp.data;
-      })
-    },
-    drawerOpen(row){
-      this.course = row;
-      this.drawer = true;
-      const _this = this;
-      console.log(this.offerId)
-      axios.get("http://localhost:8181/courseObjective/getAll/",{
-        params: {
-        },
-        crossDomain: true,
-        xhrFields: {withCredentials: true},
-        headers: {
-          token: this.getToken(),
-        }
-      }).then(function (resp) {
-        _this.ObjectiveData = resp.data;
-      })
-    },
-    drawerClose(done) {
-      this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-    },
     deleteCourseList(){
       let courseIdList = "";
       this.multipleSelection.forEach(element => {
-        courseIdList = courseIdList + element.courseId + ",";
+        courseIdList = courseIdList + element.objectiveId + ",";
       });
       const _this = this;
-      axios.delete("http://localhost:8181/course/deleteList",{
+      axios.delete("http://localhost:8181/courseObjective/deleteList",{
         params: {
           courseIdList : courseIdList,
         },
@@ -264,7 +146,7 @@ export default {
       })
     },
     deleteSelection(){
-      this.$confirm('确认移除所选课程吗？')
+      this.$confirm('确认移除所选课程目标吗？')
           .then(_ => {
             this.deleteCourseList();
           })
@@ -274,7 +156,7 @@ export default {
       this.multipleSelection = val;
     },
     toExcel(){
-      axios.get("http://localhost:8181/course/export/", {
+      axios.get("http://localhost:8181/courseObjective/export/", {
         params: {
         },
         crossDomain: true,
@@ -285,7 +167,7 @@ export default {
         }
       }).then(function (resp) {
         const blob = new Blob([resp.data], {type: 'application/vnd.ms-excel'})
-        let filename = '课程信息.xls'
+        let filename = '课程目标信息.xls'
         // 创建一个超链接，将文件流赋进去，然后实现这个超链接的单击事件
         const elink = document.createElement('a')
         elink.download = filename
@@ -306,9 +188,9 @@ export default {
     },
     deleteCourse(data){
       const _this = this;
-      axios.delete("http://localhost:8181/course/delete",{
+      axios.delete("http://localhost:8181/courseObjective/delete",{
         params: {
-          id: data.courseId,
+          id: data.objectiveId,
         },
         crossDomain: true,
         xhrFields: {withCredentials: true},
@@ -331,7 +213,7 @@ export default {
       })
     },
     downTemplate(){
-      this.fileUrl = "http://localhost:8181/static/data/课程信息模板.xls";
+      this.fileUrl = "http://localhost:8181/static/data/课程目标信息模板.xls";
     },
     uploadSuccess(response, file, fileList){
       this.fileList = [];
@@ -369,7 +251,7 @@ export default {
     },
     newPage(currentPage){
       const _this = this;
-      axios.get('http://localhost:8181/course/findAll/',{
+      axios.get('http://localhost:8181/courseObjective/findAll/',{
         params: {
           page: currentPage,
           size: this.pageSize,
@@ -379,8 +261,7 @@ export default {
         headers: {
           token: this.getToken(),
         }
-      })
-          .then(function (response){
+      }).then(function (response){
             _this.tableData = response.data.records;
             _this.total = response.data.total;
           })

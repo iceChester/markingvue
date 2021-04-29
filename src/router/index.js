@@ -27,6 +27,7 @@ import GroupCollectingTasks from "@/views/student/GroupCollectingTasks";
 import GroupOverdueTasks from "@/views/student/GroupOverdueTasks";
 import GroupTasks from "@/views/teacher/GroupTasks";
 import GroupTaskDetail from "@/views/teacher/GroupTaskDetail";
+import CourseObjectiveData from "@/views/admin/CourseObjectiveData";
 Vue.use(VueRouter)
 
 export const fixedRouter = [
@@ -106,6 +107,11 @@ export const permissionRouter  = [
         path: '/CourseData',
         name: '课程信息',
         component: CourseData
+      },
+      {
+        path: '/CourseObjectiveData',
+        name: '课程指标信息',
+        component: CourseObjectiveData
       },
     ]
   },

@@ -111,7 +111,7 @@ export default {
       }
     }
     return {
-      dialogTitle: "《"+taskForm.title+"》发布成功，是否需要添加附件",
+
       isCooperationShow: false,
       teacherList: [],
       weightCount: 0,
@@ -132,6 +132,7 @@ export default {
         markingAccount: '',
         markingWeight: '',
       },
+      dialogTitle: "发布成功，是否需要添加附件",
       taskOptions: [
         {
           value: 0,
