@@ -64,6 +64,33 @@
       <el-button @click="resetForm('taskForm')">重置</el-button>
     </el-form-item>
   </el-form>
+  <div>
+    <el-dialog
+        :title= "dialogTitle"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :show-close="false">
+      <el-upload
+          class="upload-demo"
+          ref="upload"
+          action=""
+          :headers="this.headers"
+          :data="this.taskData"
+          :multiple = "true"
+          :http-request="httpRequest"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :on-success="cleanFileList"
+          :file-list="fileList"
+          :auto-upload="false">
+        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="dialogClose">关 闭</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </div>
 </template>
 
@@ -84,11 +111,18 @@ export default {
       }
     }
     return {
+      dialogTitle: "《"+taskForm.title+"》发布成功，是否需要添加附件",
       isCooperationShow: false,
       teacherList: [],
       weightCount: 0,
       teacherCount: 0,
+      dialogVisible: false,
+      studentTaskData: [],
+      fileList: [],
+      file: [],
+      newData: new FormData(),
       taskForm: {
+        taskId: '',
         title: '',
         taskType: 0,
         markingType: 0,
@@ -146,6 +180,53 @@ export default {
     this.handleChange(0);
   },
   methods: {
+    httpRequest(param) {
+      //this.file.push(param.file);// 需要上传多个文件，为避免发送多次请求，因此在这里只进行文件的获取，param可以拿到文件上传的所有信息
+      this.newData.append('file', param.file);
+    },
+    cleanFileList(response, file, fileList){
+      this.fileList = [];
+      this.$message({
+        type: 'info',
+        message: "提交成功"
+      });
+    },
+    submitUpload() {
+      const  _this = this;
+      this.$refs.upload.submit();
+      this.newData.append('file', this.file);
+      this.newData.append("task", JSON.stringify(this.taskForm)) // 这里需要转换一下格式传给后台
+      console.log(this.newData);
+      axios.post("http://localhost:8181/task/attachment/", this.newData,{
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+          'Content-Type':'multipart/form-data'
+        }
+      }).then(function(response) {
+        if (response.data) {
+          _this.$message({
+            type: 'info',
+            message: "提交成功"
+          });
+        }
+      })
+          .catch(function(error) {
+            console.log(error);
+          });
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+      this.reload();
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    dialogClose() {
+      this.dialogVisible = false;
+      this.$router.push('/CourseTasks');
+    },
     submitForm(formName) {
       let sum = 0;
       let weight = "";
@@ -177,7 +258,6 @@ export default {
           }
         });
       }else{
-        console.log(this.taskForm)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             const _this = this;
@@ -191,14 +271,9 @@ export default {
                 token: this.getToken(),
               }
             }).then(function (resp) {
-              console.log(resp.data)
-              if(resp.data){
-                _this.$alert("《"+_this.taskForm.title+'》发布成功', '消息', {
-                  confirmButtonText: '确定',
-                  callback: action => {
-                    _this.$router.push('/CourseTasks');
-                  }
-                });
+              if(resp.data>0){
+                _this.dialogVisible = true;
+                _this.taskForm.taskId = resp.data;
               }
             })
           } else {

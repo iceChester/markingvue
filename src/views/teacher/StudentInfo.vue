@@ -127,7 +127,7 @@ export default {
             type: 'info',
             message: "移除成功"
           });
-          this.reload();
+          _this.reload();
         }else {
           _this.$message({
             type: 'warning',

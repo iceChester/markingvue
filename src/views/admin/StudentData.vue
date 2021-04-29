@@ -37,7 +37,12 @@
           :data="tableData"
           height="580"
           border
-          style="width: 80%;margin-left: 8%">
+          style="width: 80%;margin-left: 8%"
+          @selection-change="handleSelectionChange">
+        <el-table-column
+            type="selection"
+            width="55">
+        </el-table-column>
         <el-table-column fixed label="序号" width="50" align="center">
           <template scope="scope">
         <span>
@@ -114,7 +119,8 @@ export default {
         account: '',
         studentId: '',
       },
-      ]
+      ],
+      multipleSelection: [],
     }
   },
   created() {
@@ -135,6 +141,46 @@ export default {
     })
   },
   methods: {
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    deleteStudentList(){
+      let studentList = "";
+      this.multipleSelection.forEach(element => {
+        studentList = studentList + element.account + ",";
+      });
+      const _this = this;
+      axios.delete("http://localhost:8181/studnet/deleteList",{
+        params: {
+          studentList : studentList,
+        },
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        if(resp.data){
+          _this.$message({
+            type: 'info',
+            message: "删除成功"
+          });
+          _this.$router.go(0);
+        }else {
+          _this.$message({
+            type: 'warning',
+            message: "删除失败"
+          });
+        }
+      })
+    },
+    deleteSelection(){
+      this.$confirm('确认移除所选学生吗？')
+          .then(_ => {
+            this.deleteStudentList();
+          })
+          .catch(_ => {});
+    },
     toExcel(){
       axios.get("http://localhost:8181/student/export/", {
         params: {

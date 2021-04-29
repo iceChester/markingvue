@@ -75,7 +75,6 @@
 </template>
 
 <script>
-import qs from 'qs';
 export default {
   name: "CourseData",
   data() {
@@ -122,7 +121,6 @@ export default {
       this.multipleSelection.forEach(element => {
         courseIdList = courseIdList + element.courseId + ",";
       });
-      console.log(courseIdList);
       const _this = this;
       axios.delete("http://localhost:8181/course/deleteList",{
         params: {

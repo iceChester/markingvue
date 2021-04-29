@@ -66,6 +66,7 @@
       <el-button @click="dialogClose">关 闭</el-button>
       </span>
     </el-dialog>
+    <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
   </div>
 </template>
 
