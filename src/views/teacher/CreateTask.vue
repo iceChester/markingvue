@@ -59,6 +59,11 @@
     <el-form-item label="作业详细内容" prop="detail" class="text-area">
       <el-input type="textarea" v-model="taskForm.detail" :rows="5"></el-input>
     </el-form-item>
+    <el-form-item label="作业对应课程目标点" style="width: 100%">
+      <el-transfer v-model="taskForm.objective" :data="transferData" :render-content="renderContent">
+      </el-transfer>
+    </el-form-item>
+
     <el-form-item>
       <el-button type="primary" @click="submitForm('taskForm')">立即创建</el-button>
       <el-button @click="resetForm('taskForm')">重置</el-button>
@@ -74,8 +79,6 @@
           class="upload-demo"
           ref="upload"
           action=""
-          :headers="this.headers"
-          :data="this.taskData"
           :multiple = "true"
           :http-request="httpRequest"
           :on-preview="handlePreview"
@@ -109,9 +112,36 @@ export default {
       }else {
         callback()
       }
-    }
-    return {
+    };
+    const generateData  = _ => {
+      const data = [];
+      axios.get("http://localhost:8181/offerCourses/findObjectives",{
+        params: {
+          offerId: this.$store.getters.getOfferId,
+        },
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        for (let i = 0; i < Object.keys(resp.data).length; i++) {
+          data.push({
+            key: resp.data[i].objectiveId,
+            label: `指标点 ${i+1} ：${ resp.data[i].objectiveContent }`,
+          });
+        }
+      })
 
+      return data;
+    };
+    return {
+      transferData: generateData(),
+      objectiveData: [{
+        objectiveId: '',
+        objectiveContent: '',
+      }],
+      taskObjectives: '',
       isCooperationShow: false,
       teacherList: [],
       weightCount: 0,
@@ -131,6 +161,7 @@ export default {
         offerId: '',
         markingAccount: '',
         markingWeight: '',
+        objective:[],
       },
       dialogTitle: "发布成功，是否需要添加附件",
       taskOptions: [
@@ -181,6 +212,9 @@ export default {
     this.handleChange(0);
   },
   methods: {
+    renderContent (h, option) {
+      return h('span', {domProps: {title: option.label}}, option.label);
+    },
     httpRequest(param) {
       //this.file.push(param.file);// 需要上传多个文件，为避免发送多次请求，因此在这里只进行文件的获取，param可以拿到文件上传的所有信息
       this.newData.append('file', param.file);
