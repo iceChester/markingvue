@@ -7,7 +7,7 @@
         v-model="value"
         :data="studentData">
     </el-transfer>
-    <el-button type="primary" @click="add">添加组员</el-button>
+    <el-button type="primary" @click="add">确认添加</el-button>
     <el-button type="primary" @click="cancel">取消</el-button>
   </div>
 </template>
@@ -15,6 +15,7 @@
 <script>
 export default {
   name: "AddMember",
+  inject: ['reload'],
   data() {
     const generateData = _ => {
       const studentData = [];
@@ -68,8 +69,8 @@ export default {
           .then(_ => {
             if(this.value!==null){
               this.value.forEach((item,index) => {
-                let account = _this.studentData[index].account;
-                let studentName = _this.studentData[index].label;
+                let account = _this.studentData[item].account;
+                let studentName = _this.studentData[item].label;
                 obj.push({
                   offerId: this.offerId,
                   groupId: this.groupId,
@@ -78,6 +79,7 @@ export default {
                 })
               });
               this.memberInfo = obj;
+              console.log(obj);
               axios.post("http://localhost:8181/groupInfo/save",this.memberInfo,
                   {
                     crossDomain: true,
@@ -89,7 +91,7 @@ export default {
               ).then(function (resp) {
                 if(resp.data){
                   _this.$message('添加成功');
-                  _this.$router.go(0);
+                  _this.reload();
                 }
               })
             }

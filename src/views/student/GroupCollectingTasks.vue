@@ -37,7 +37,7 @@
         >
           <template slot-scope="scope">
             <el-button @click.stop="handleClick(scope.row)" type="text" size="small" v-if="isLeader">提交作业</el-button>
-            <el-button @click.stop="downloadAttachment(scope.row)" type="text" size="small" v-if="scope.row.attachment.length>0">下载附件</el-button>
+            <el-button @click.stop="downloadAttachment(scope.row)" type="text" size="small" v-if="scope.row.attachment!=null">下载附件</el-button>
           </template>
         </el-table-column>
       </el-table>

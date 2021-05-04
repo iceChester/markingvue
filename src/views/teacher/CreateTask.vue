@@ -60,7 +60,7 @@
       <el-input type="textarea" v-model="taskForm.detail" :rows="5"></el-input>
     </el-form-item>
     <el-form-item label="作业对应课程目标点" style="width: 100%">
-      <el-transfer v-model="taskForm.objective" :data="transferData" :render-content="renderContent">
+      <el-transfer :data="transferData" :render-content="renderContent" v-model="ObjectValue">
       </el-transfer>
     </el-form-item>
 
@@ -136,12 +136,12 @@ export default {
       return data;
     };
     return {
+      ObjectValue: [],
       transferData: generateData(),
       objectiveData: [{
         objectiveId: '',
         objectiveContent: '',
       }],
-      taskObjectives: '',
       isCooperationShow: false,
       teacherList: [],
       weightCount: 0,
@@ -161,7 +161,7 @@ export default {
         offerId: '',
         markingAccount: '',
         markingWeight: '',
-        objective:[],
+        taskObjectives: '',
       },
       dialogTitle: "发布成功，是否需要添加附件",
       taskOptions: [
@@ -299,6 +299,13 @@ export default {
             this.taskForm.offerId = this.$store.getters.getOfferId;
             this.taskForm.markingWeight = weight;
             this.taskForm.markingAccount = account;
+            let taskObjectives = "";
+            if(this.ObjectValue!==null) {
+              this.ObjectValue.forEach((item, index) => {
+                taskObjectives = taskObjectives + item + ",";
+              });
+            }
+            this.taskForm.taskObjectives = taskObjectives;
             axios.post("http://localhost:8181/task/save",this.taskForm,{
               crossDomain: true,
               xhrFields: {withCredentials: true},

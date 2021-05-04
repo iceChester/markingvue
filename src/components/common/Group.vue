@@ -55,6 +55,14 @@
                       label="学号"
                   >
                   </el-table-column>
+                  <el-table-column
+                      label="操作"
+                      v-if="!isShowButton"
+                  >
+                    <template slot-scope="scope">
+                      <el-button @click.stop="deleteClick(scope.row)"size="small"type="warning" >移除成员</el-button>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </div>
             </el-card>
@@ -73,6 +81,7 @@ import GroupCollectingTasks from "@/views/student/GroupCollectingTasks";
 import GroupOverdueTasks from "@/views/student/GroupOverdueTasks";
 export default {
   name: "Group",
+  inject: ['reload'],
   components: {
     AddMember,GroupCollectingTasks,GroupOverdueTasks,GroupAccomplishTasks
   },
@@ -104,6 +113,33 @@ export default {
     this.checkLeader();
   },
   methods: {
+    deleteClick(row){
+      const _this = this;
+      axios.delete("http://localhost:8181/groupInfo/removeMember",{
+        params: {
+          groupId: this.$store.getters.getGroupId,
+          account: row.memberAccount,
+        },
+        crossDomain: true,
+        xhrFields: {withCredentials: true},
+        headers: {
+          token: this.getToken(),
+        }
+      }).then(function (resp) {
+        if(resp.data){
+          _this.$message({
+            type: 'info',
+            message: "删除成功"
+          });
+          _this.reload();
+        }else {
+          _this.$message({
+            type: 'warning',
+            message: "删除失败"
+          });
+        }
+      })
+    },
     goBack(){
       this.isCollectingShow = false;
       this.isAccomplishShow = false;
