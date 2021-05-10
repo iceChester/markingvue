@@ -33,6 +33,7 @@
       </div></el-col>
     </el-row>
     <div>
+      <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 8%">移除所选学生</el-button>
       <el-table
           :data="tableData"
           height="580"

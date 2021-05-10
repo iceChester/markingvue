@@ -107,22 +107,12 @@
   </div>
   <div>
     <el-drawer
-        title="xxx的作业"
+        :title="this.studentName"
         :visible.sync="drawer"
         :before-close="handleClose"
         size="50%"
         style="overflow: auto"
     >
-      <div>
-        <el-button @click="openInnerDrawer">其他文件!</el-button>
-        <el-drawer
-            title="我是里面的"
-            :append-to-body="true"
-            :before-close="handleClose"
-            :visible.sync="innerDrawer">
-          <p>_(:зゝ∠)_</p>
-        </el-drawer>
-      </div>
       <div style="height: 45%" v-if="isImgShow">
         <el-carousel :interval="4000" type="card">
           <el-carousel-item v-for="item in this.imgSrc" :key="item">
@@ -155,6 +145,7 @@ export default {
   },
   data(){
     return {
+      studentName: '',
       videoSrc: '',
       showViewer: false,
       imgSrc: [],
@@ -286,7 +277,6 @@ export default {
     },
     changeGroupScore(data){
       const groupData = data.groupScore;
-      console.log(data.groupScore)
       data.studentTaskList.forEach(element => {
         element.score = groupData;
         this.setScore(element);
@@ -436,9 +426,9 @@ export default {
     },
     openDrawer(row) {
       let path = "studentTask/"+this.$store.getters.getOfferId+"/" + "小组作业" + "/" +this.taskId + "/" + row.groupId + "/";
-      let videoName = row.videoFile.split(",")
-      let imgName = row.imgFile.split(",")
-      console.log(videoName)
+      let videoName = row.videoFile.split(",");
+      let imgName = row.imgFile.split(",");
+      this.studentName = row.studentName;
       if(videoName.length>0&&videoName[0]!=""){
         this.videoSrc = path + videoName[0];
         this.isVideoShow = true;

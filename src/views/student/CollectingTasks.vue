@@ -75,6 +75,8 @@ export default {
   inject: ['reload'],
   data() {
     return {
+      activeNames: [],
+      title: '对应的课程目标-',
       dialogVisible: false,
       studentTaskData: [],
       fileList: [],

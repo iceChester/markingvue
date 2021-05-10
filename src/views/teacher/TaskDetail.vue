@@ -107,22 +107,12 @@
     </div>
     <div>
       <el-drawer
-          title="xxx的作业"
+          :title="this.studentName"
           :visible.sync="drawer"
           :before-close="handleClose"
           size="50%"
           style="overflow: auto"
           >
-        <div>
-          <el-button @click="openInnerDrawer">其他文件!</el-button>
-          <el-drawer
-              title="我是里面的"
-              :append-to-body="true"
-              :before-close="handleClose"
-              :visible.sync="innerDrawer">
-            <p>_(:зゝ∠)_</p>
-          </el-drawer>
-        </div>
         <div style="height: 45%" v-if="isImgShow">
           <el-carousel :interval="4000" type="card">
             <el-carousel-item v-for="item in this.imgSrc" :key="item">
@@ -158,6 +148,7 @@ export default {
   },
   data() {
     return {
+      studentName: '',
       videoSrc: '',
       showViewer: false,
       imgSrc: [],
@@ -177,7 +168,7 @@ export default {
       drawer: false,
       innerDrawer: false,
       barData: [0, 0, 0, 0, 0, 0],
-      xData: ['0~20', '20~40', '40~60', '60~80', '80~100',"未批改"],
+      xData: ['0~20', '20~40', '40~60', '60~80', '80~100',"未得出总分"],
       pieData:[          // 数据数组，name 为数据项名称，value 为数据项值
         {value:0, name:'已完成'},
         {value:100, name:'未完成'},
@@ -321,7 +312,6 @@ export default {
           }else if(this.markingType.weight.length ==3){
             data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0 + data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0 + data.scoreThree * parseFloat(this.markingType.weight[2])/100.0;
           }
-          console.log();
           data.score = 0;
         }
         this.saveScore(data);
@@ -498,6 +488,7 @@ export default {
       let path = "studentTask/"+this.$store.getters.getOfferId+"/" + "个人作业" + "/" +this.taskId + "/" + row.account + "/";
       let videoName = row.videoFile.split(",")
       let imgName = row.imgFile.split(",")
+      this.studentName = row.studentName;
       console.log(videoName)
       if(videoName.length>0&&videoName[0]!=""){
         this.videoSrc = path + videoName[0];

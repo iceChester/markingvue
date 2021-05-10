@@ -42,6 +42,8 @@ export default {
   name: "GroupOverdueTasks",
   data() {
     return {
+      activeNames: [],
+      title: '对应的课程目标-',
       studentTaskData: [],
     }
   },
