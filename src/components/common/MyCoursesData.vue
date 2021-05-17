@@ -25,7 +25,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
+    <el-backtop></el-backtop>
   </div>
 </template>
 

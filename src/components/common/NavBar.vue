@@ -19,7 +19,7 @@
                 active-text-color="#ffd04b"
                 v-bind:router="true"
                 v-bind:default-active="$route.path">
-              <el-submenu v-for="(item,index) in this.meuns" :index="index+''" v-if="!item.hidden">
+              <el-submenu v-for="(item,index) in this.menus" :index="index+''" v-if="!item.hidden">
                 <template slot="title">
                   <i class="el-icon-message"></i>
                   <span slot="title">{{ item.name }}</span>
@@ -29,7 +29,7 @@
                   {{ item2.name }}
                 </el-menu-item>
               </el-submenu>
-              <el-submenu style="float: right">
+              <el-submenu style="float: right" index="">
                 <template slot="title">
                   <i class="el-icon-message"></i>
                   <span slot="title">我的</span>
@@ -61,11 +61,11 @@ export default {
       isCollapse: false,
       activeIndex: '1',
       activeIndex2: '1',
-      meuns: [],
+      menus: [],
     }
   },
   mounted() {
-    this.meuns = this.routes;
+    this.menus = this.routes;
   },
   methods: {
     handleSelect(key, keyPath) {

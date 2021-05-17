@@ -48,7 +48,6 @@ export const fixedRouter = [
       course: 'null'
     },
     component: Index,
-    redirect: '/Home',
     children: [
       {
         path: "/Home",
@@ -130,22 +129,6 @@ export const permissionRouter  = [
         name: '我的课程',
         component: StudentCourse
       },
-    ]
-  },
-  {
-    path: "/CourseTask",
-    name: "课程作业",
-    component: Index,
-    meta: {
-      roles: ['teacher'],
-      course: 'null'
-    },
-    children: [
-      {
-        path: "/CourseTask",
-        name: "我的课程作业",
-        component: CourseTasks
-      }
     ]
   },
   {
@@ -345,6 +328,10 @@ export const permissionRouter  = [
 
 ]
 
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 const router = new VueRouter({
   mode: 'history',

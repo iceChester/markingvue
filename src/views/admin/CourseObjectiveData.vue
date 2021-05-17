@@ -6,6 +6,14 @@
     <el-divider></el-divider>
     <el-row :gutter="20" style="margin-bottom: 20px">
       <el-col :span="2" style="margin-left: 8%"><div>
+        <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 8%">移除所选课程目标</el-button>
+      </div></el-col>
+      <el-col :span="2" style="float: left"><div>
+        <el-link :underline="false" :href="fileUrl" download="课程目标信息模板.xls" >
+          <el-button size="small" type="primary" @click="downTemplate">课程目标信息模板下载</el-button>
+        </el-link>
+      </div></el-col>
+      <el-col :span="2" style="float: right;margin-right: 10%"><div>
         <el-upload
             class="upload-demo"
             action="http://localhost:8181/courseObjective/importExcel/"
@@ -23,17 +31,11 @@
           <el-button size="small" type="primary">导入数据</el-button>
         </el-upload>
       </div></el-col>
-      <el-col :span="2" style="float: left"><div>
-        <el-link :underline="false" :href="fileUrl" download="课程目标信息模板.xls" >
-          <el-button size="small" type="primary" @click="downTemplate">课程目标信息模板下载</el-button>
-        </el-link>
-      </div></el-col>
-      <el-col :span="2" style="float: right;margin-right: 10%"><div>
-        <el-button type="primary" @click="toExcel"size="small" >导出课程目标数据</el-button>
+      <el-col :span="2" style="float: right;margin-right: -1%"><div>
+        <el-button type="primary" @click="toExcel"size="small" >导出数据</el-button>
       </div></el-col>
     </el-row>
     <div>
-      <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 8%">移除所选课程目标</el-button>
       <el-table
           :data="tableData"
           height="580"
@@ -97,22 +99,7 @@ export default {
     }
   },
   created() {
-    const _this = this;
-    console.log(this.offerId)
-    axios.get("http://localhost:8181/courseObjective/findAll/",{
-      params: {
-        page: 1,
-        size: this.pageSize,
-      },
-      crossDomain: true,
-      xhrFields: {withCredentials: true},
-      headers: {
-        token: this.getToken(),
-      }
-    }).then(function (resp) {
-      _this.tableData = resp.data.records;
-      _this.total = resp.data.total;
-    })
+    this.newPage(1);
   },
   methods: {
     deleteCourseList(){

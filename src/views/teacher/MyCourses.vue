@@ -1,7 +1,6 @@
 <template>
   <div>
     <MyCoursesData ref="myCoursesData" v-if="option" :option="option"></MyCoursesData>
-
   </div>
 </template>
 
@@ -38,8 +37,6 @@ export default {
             }
         ).then(function (resp){
           _this.option = resp.data;
-          console.log(resp.data);
-          console.log(_this.option);
         })
       }
   },

@@ -2,7 +2,8 @@
   <div>
     <el-table
         :data="tableData.filter(data => !search || data.courseName.toLowerCase().includes(search.toLowerCase()))"
-        style="width: 100%">
+        :border="true"
+        style="width: 66%;margin: 3% 15% 1% 15%">
       <el-table-column
           label="编号"
           prop="courseId">
@@ -23,15 +24,12 @@
           <el-button
               size="mini"
               @click="handleEdit(scope.$index, scope.row)">开设课程</el-button>
-<!--          <el-button-->
-<!--              size="mini"-->
-<!--              type="danger"-->
-<!--              @click="handleDelete(scope.$index, scope.row)">Delete</el-button>-->
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
         background
+        style="margin-left: 25%"
         layout="prev, pager, next"
         :page-size=pageSize
         :total=total
@@ -46,7 +44,7 @@ export default {
     return {
       pageSize: 10,
       total: null,
-      tableData: null,
+      tableData: {},
       search: ''
     }
   },

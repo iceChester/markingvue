@@ -67,7 +67,7 @@
       <el-button @click="dialogClose">关 闭</el-button>
       </span>
     </el-dialog>
-    <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
+    <el-backtop ></el-backtop>
   </div>
 </template>
 
@@ -203,8 +203,6 @@ export default {
           token: this.getToken(),
         }
       }).then(function (resp) {
-        console.log("resp.data");
-        console.log(resp.data);
         _this.studentTaskData = resp.data;
       })
     },

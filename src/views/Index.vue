@@ -31,7 +31,6 @@ export default {
   },
   computed: {
     getRoutes(){
-      console.log(this.$store.getters.getGlobalRouter)
       return this.$store.getters.getGlobalRouter;
     }
   },

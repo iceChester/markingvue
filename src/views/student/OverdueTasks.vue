@@ -31,7 +31,7 @@
       </el-table-column>
     </el-table>
   </div>
-  <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
+  <el-backtop ></el-backtop>
 </div>
 </template>
 
@@ -51,7 +51,7 @@ export default {
   methods: {
     taskDetail() {
       const _this = this;
-      axios.get("http://localhost:8181/studentTask/studentOverdueTask", {
+      axios.get("http://localhost:8181/task/studentOverdueTask", {
         params: {
           offerId: this.$store.getters.getOfferId,
           account: this.$store.getters.getAccount,

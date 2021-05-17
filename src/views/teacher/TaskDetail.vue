@@ -266,51 +266,59 @@ export default {
     setScore(data){
       const testScore = parseInt(data.score);
       if(testScore>=0&&testScore<=100){
-        if(this.markingType.weight.length==1){
-          if(this.markingType.position==1){
+        if(this.markingType.weight.length===1){
+          if(this.markingType.position===1){
             data.scoreOne = testScore;
             data.scoreTwo = 0;
             data.scoreThree = 0;
           }
-        }else if(this.markingType.weight.length==2){
-          if(this.markingType.position==1){
+        }else if(this.markingType.weight.length===2){
+          if(this.markingType.position===1){
             data.scoreOne = testScore;
             data.scoreThree = 0;
-          }else if(this.markingType.position==2){
+          }else if(this.markingType.position===2){
             data.scoreTwo = testScore;
             data.scoreThree = 0;
           }
-          if(this.markingType.weight[0]==0){
+          if(this.markingType.weight[0]===0){
             data.scoreOne = 0;
           }
-          if(this.markingType.weight[1]==0){
+          if(this.markingType.weight[1]===0){
             data.scoreTwo = 0;
           }
-        }else if(this.markingType.weight.length==3){
-          if(this.markingType.position==1){
+        }else if(this.markingType.weight.length===3){
+          if(this.markingType.position===1){
             data.scoreOne = testScore;
-          }else if(this.markingType.position==2){
+          }else if(this.markingType.position===2){
             data.scoreTwo = testScore;
-          }else if(this.markingType.position==3){
+          }else if(this.markingType.position===3){
             data.scoreThree = testScore;
           }
-          if(this.markingType.weight[0]==0){
+          if(this.markingType.weight[0]===0){
             data.scoreOne = 0;
           }
-          if(this.markingType.weight[1]==0){
+          if(this.markingType.weight[1]===0){
             data.scoreTwo = 0;
           }
-          if(this.markingType.weight[2]==0){
+          if(this.markingType.weight[2]===0){
             data.scoreThree = 0;
           }
         }
-        if(data.scoreOne!=undefined&&data.scoreTwo!=undefined&&data.scoreThree!=undefined){
-          if(this.markingType.weight.length ==1){
-            data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0;
-          }else if(this.markingType.weight.length ==2){
-            data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0+ data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0;
-          }else if(this.markingType.weight.length ==3){
-            data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0 + data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0 + data.scoreThree * parseFloat(this.markingType.weight[2])/100.0;
+        if(data.scoreOne!==undefined &&
+            data.scoreTwo!==undefined &&
+            data.scoreThree!==undefined){
+          if(this.markingType.weight.length === 1){
+            data.scoreTotal = data.scoreOne *
+                parseFloat(this.markingType.weight[0])/100.0;
+          }else if(this.markingType.weight.length === 2){
+            data.scoreTotal = data.scoreOne *
+                parseFloat(this.markingType.weight[0])/100.0 +
+                data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0;
+          }else if(this.markingType.weight.length === 3){
+            data.scoreTotal = data.scoreOne *
+                parseFloat(this.markingType.weight[0])/100.0 +
+                data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0 +
+                data.scoreThree * parseFloat(this.markingType.weight[2])/100.0;
           }
           data.score = 0;
         }

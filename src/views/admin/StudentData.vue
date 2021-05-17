@@ -5,7 +5,15 @@
     </div>
     <el-divider></el-divider>
     <el-row :gutter="20" style="margin-bottom: 20px">
-      <el-col :span="2" span="2"style="margin-left: 8%" ><div>
+      <el-col :span="2" style="margin-left: 8%" ><div>
+        <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 8%">移除所选学生</el-button>
+      </div></el-col>
+      <el-col :span="2" style="float: left"><div>
+        <el-link :underline="false" :href="fileUrl" download="学生信息模板.xls" >
+          <el-button size="small" type="primary" @click="downTemplate">学生信息模板下载</el-button>
+        </el-link>
+      </div></el-col>
+      <el-col :span="2" style="float: right;margin-right: 10%"><div>
         <el-upload
             class="upload-demo"
             action="http://localhost:8181/student/importExcel/"
@@ -23,17 +31,12 @@
           <el-button size="small" type="primary">导入数据</el-button>
         </el-upload>
       </div></el-col>
-      <el-col :span="2" style="float: left"><div>
-        <el-link :underline="false" :href="fileUrl" download="学生信息模板.xls" >
-          <el-button size="small" type="primary" @click="downTemplate">学生信息模板下载</el-button>
-        </el-link>
-      </div></el-col>
-      <el-col :span="2" style="float: right;margin-right: 10%"><div>
+      <el-col :span="2" style="float: right;margin-right: -1%"><div>
         <el-button type="primary" @click="toExcel"size="small" >导出表格</el-button>
       </div></el-col>
     </el-row>
     <div>
-      <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 8%">移除所选学生</el-button>
+
       <el-table
           :data="tableData"
           height="580"
@@ -125,21 +128,7 @@ export default {
     }
   },
   created() {
-    const _this = this;
-    axios.get("http://localhost:8181/student/findAll/",{
-      params: {
-        page: 1,
-        size: this.pageSize,
-      },
-      crossDomain: true,
-      xhrFields: {withCredentials: true},
-      headers: {
-        token: this.getToken(),
-      }
-    }).then(function (resp) {
-      _this.tableData = resp.data.records;
-      _this.total = resp.data.total;
-    })
+    this.newPage(1);
   },
   methods: {
     handleSelectionChange(val) {
@@ -207,19 +196,23 @@ export default {
       })
     },
     likeName(){
-      const _this = this;
-      axios.get("http://localhost:8181/student/likeByName",{
-        params: {
-          keyWord: this.keyWord,
-        },
-        crossDomain: true,
-        xhrFields: {withCredentials: true},
-        headers: {
-          token: this.getToken(),
-        }
-      }).then(function (resp) {
-        _this.tableData = resp.data;
-      })
+      if(this.keyWord===""){
+        this.initData();
+      }else {
+        const _this = this;
+        axios.get("http://localhost:8181/student/likeByName",{
+          params: {
+            keyWord: this.keyWord,
+          },
+          crossDomain: true,
+          xhrFields: {withCredentials: true},
+          headers: {
+            token: this.getToken(),
+          }
+        }).then(function (resp) {
+          _this.tableData = resp.data;
+        })
+      }
     },
     handleOpen(data){
       this.$confirm('确认删除？')
