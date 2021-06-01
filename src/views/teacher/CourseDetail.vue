@@ -28,7 +28,7 @@
             </el-main>
           </el-col>
         </el-row>
-        <el-footer>@By XiaoMao</el-footer>
+        <el-footer></el-footer>
       </el-container>
     </el-container>
 

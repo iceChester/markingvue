@@ -3,7 +3,11 @@
     <GroupAccomplishTasks v-if="isAccomplishShow" @goBack="goBack" :isLeader = "!this.isShowButton"></GroupAccomplishTasks>
     <GroupOverdueTasks v-if="isOverdueShow"@goBack="goBack"></GroupOverdueTasks>
     <GroupCollectingTasks v-if="isCollectingShow"@goBack="goBack" :isLeader = "!this.isShowButton"></GroupCollectingTasks>
-    <div v-if="isMemberShow">
+    <div style="margin: 0px auto; text-align: center"  v-if="isMemberShow">
+      <h2>小组信息</h2>
+    </div>
+    <el-divider  v-if="isMemberShow"></el-divider>
+    <div v-if="isMemberShow" style="margin-left: 25%">
       <el-row :gutter="20">
         <el-col :span="8">
           <div>
@@ -18,7 +22,7 @@
             <el-col :span="5" style="padding-top: 22px;margin-right: 10px">
               <el-button type="primary" @click="add" :disabled="this.isShowButton">添加组员</el-button>
             </el-col>
-            <el-col :span="3" style="padding-top: 22px">
+            <el-col :span="5" style="padding-top: 22px">
               <el-dropdown>
                 <el-button type="primary">
                   小组作业<i class="el-icon-arrow-down el-icon--right"></i>
@@ -35,11 +39,13 @@
         <el-col :span="20" style="margin-top: 50px">
           <AddMember ref="addMember" v-if="isShowAdd" @cancel="cancel"></AddMember>
         </el-col>
-        <el-col :span="18" style="margin-top: 50px">
+        <el-col :span="12" >
           <div>
             <el-card class="box-card">
               <div slot="header" class="clearfix">
-                <span>小组成员</span>
+                <span>
+                  <strong>小组成员</strong>
+                </span>
               </div>
               <div>
                 <el-table
@@ -211,5 +217,11 @@ export default {
 </script>
 
 <style scoped>
+/deep/.el-table th > .cell {
+  text-align: center;
+}
 
+/deep/.el-table .cell {
+  text-align: center;
+}
 </style>

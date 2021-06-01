@@ -17,7 +17,7 @@
                 <el-input type="password" v-model="loginData.password" autocomplete="off" placeholder="密码"> </el-input>
               </el-form-item>
               <el-form-item>
-                  <el-button type="primary" @click="userLogin()">提交</el-button>
+                  <el-button type="primary" @click="userLogin()">登录</el-button>
                 <el-button type="primary" @click="changePassword()" style="margin-left: 15%">修改密码</el-button>
                   <el-button @click="resetForm('loginData')" style="float: right">重置</el-button>
 

@@ -36,7 +36,6 @@
       </div></el-col>
     </el-row>
     <div>
-
       <el-table
           :data="tableData"
           height="580"
@@ -140,7 +139,7 @@ export default {
         studentList = studentList + element.account + ",";
       });
       const _this = this;
-      axios.delete("http://localhost:8181/studnet/deleteList",{
+      axios.delete("http://localhost:8181/student/deleteList",{
         params: {
           studentList : studentList,
         },
@@ -238,7 +237,7 @@ export default {
             type: 'info',
             message: "删除成功"
           });
-          this.$router.go(0);
+          _this.$router.go(0);
         }else {
           _this.$message({
             type: 'warning',
@@ -253,7 +252,7 @@ export default {
     },
     uploadSuccess(response, file, fileList){
       this.fileList = [];
-      if(response.data){
+      if(response){
         this.$message({
           type: 'info',
           message: "导入成功"

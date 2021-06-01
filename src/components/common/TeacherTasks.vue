@@ -2,23 +2,25 @@
   <div style="width: 70%;margin: 0 auto;">
     <el-divider content-position="center"><h2>结束收集的作业</h2></el-divider>
     <div style="margin: 50px auto">
-      <el-card class="box-card" v-for="(item,index) in taskFrom" style="margin-bottom: 30px">
+      <el-card class="box-card" v-for="(item,index) in taskFrom" style="margin: 30px 10%;width: 80%">
         <div >
           <div slot="header" class="clearfix">
-            <h3>作业名称：{{item.title}}</h3>
+            <span style="font-size: 20px">
+              <strong>作业名称：{{item.title}}</strong>
+            </span>
             <el-button style="float: right; padding: 3px 0" type="text" @click="taskDetail(item)">详情</el-button>
           </div>
           <el-divider></el-divider>
           <div v-if="item.objectiveContent!=null" >
-            <h3 style="margin-left: 120px">目标点：</h3>
-            <el-collapse v-model="activeNameDeadline" style="margin: 30px 10%">
+            <h3 style="margin-left: 20px">目标点：</h3>
+            <el-collapse v-model="activeNameDeadline">
               <el-collapse-item :title="title+(index+1)" :name="item.taskId+'-'+index" v-for="(item2,index) in item.objectiveContent">
                 <h3>{{ item2.objectiveContent }}</h3>
               </el-collapse-item>
             </el-collapse>
           </div>
-          <h3 style="margin-left: 120px">基本信息：</h3>
-          <el-row :gutter="20" style="margin-left: 120px;margin-bottom: 20px">
+          <h3 style="margin-left: 20px">基本信息：</h3>
+          <el-row :gutter="20" style="margin-bottom: 20px">
             <el-col :span="8">
               <div class="grid-content bg-purple">
                 <span>作业内容： {{item.detail}}</span>
@@ -30,7 +32,7 @@
               </div>
             </el-col>
           </el-row>
-          <el-row :gutter="20" style="margin-left: 120px">
+          <el-row :gutter="20">
             <el-col :span="8">
               <div class="grid-content bg-purple">
                 <span>作业类型： {{item.taskType}}</span>
@@ -50,20 +52,21 @@
     <el-card class="box-card" v-for="(item,index) in deadlineTask" style="margin-bottom: 30px">
       <div >
         <div slot="header" class="clearfix">
-          <span>作业名称：{{item.title}}</span>
-<!--          <el-button style="float: right; padding: 3px 0" type="text" @click="taskDetail(item)">详情</el-button>-->
+            <span style="font-size: 20px">
+              <strong>作业名称：{{item.title}}</strong>
+            </span>
         </div>
         <el-divider></el-divider>
         <div v-if="item.objectiveContent!=null" >
-          <h3 style="margin-left: 120px">作业课程指标点</h3>
-          <el-collapse v-model="activeNameDeadline" style="margin: 30px 10%">
+          <h3 style="margin-left: 20px">作业课程指标点</h3>
+          <el-collapse v-model="activeNameDeadline" style="margin-left: 20px">
             <el-collapse-item :title="title+(index+1)" :name="item.taskId+'-'+index" v-for="(item2,index) in item.objectiveContent">
               <h3>{{ item2.objectiveContent }}</h3>
             </el-collapse-item>
           </el-collapse>
         </div>
-        <h3 style="margin-left: 120px">作业基本信息：</h3>
-        <el-row :gutter="20" style="margin-left: 120px;margin-bottom: 20px">
+        <h3 style="margin-left: 20px">作业基本信息：</h3>
+        <el-row :gutter="20" style="margin-bottom: 20px;margin-left: 20px">
           <el-col :span="8">
             <div class="grid-content bg-purple">
               <span>作业内容： {{item.detail}}</span>
@@ -75,7 +78,7 @@
             </div>
           </el-col>
         </el-row>
-        <el-row :gutter="20" style="margin-left: 120px">
+        <el-row :gutter="20" style="margin-left: 20px" >
           <el-col :span="8">
             <div class="grid-content bg-purple">
               <span>作业类型： {{item.taskType}}</span>

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <el-row v-bind:gutter="20">
+  <div style="margin-left: 15%">
+    <el-row v-bind:gutter="20" >
       <el-col :span="10" v-for="(item, index) in this.option" >
         <el-card class="box-card" style="margin-top: 15px" shadow="hover">
           <div slot="header" class="clearfix">

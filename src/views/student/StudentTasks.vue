@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-divider content-position="center"><h2>已经截至</h2></el-divider>
+    <el-divider content-position="center"><h2>已经截止</h2></el-divider>
     <div>
       <el-table
           :data="studentTaskData"

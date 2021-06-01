@@ -1,87 +1,93 @@
 <template>
   <div>
     <el-page-header @back="goBack" content="开设课程" style="margin-bottom: 30px"></el-page-header>
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="课程编号" >
-        <el-input v-model="ruleForm.courseId" readonly></el-input>
-      </el-form-item>
-      <el-form-item label="课程名称">
-        <el-input v-model="ruleForm.courseName" readonly></el-input>
-      </el-form-item>
-      <el-form-item label="主教师" prop="mainTeacher">
-        <el-select
-            v-model="ruleForm.mainTeacher"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入教师名关键词"
-            :remote-method="remoteMethod"
-            :loading="loading">
-          <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.teacherName+'  '+item.account"
-              :value="item.account">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="助教一" >
-        <el-select
-            v-model="ruleForm.assistantTeacherOne"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入教师名关键词"
-            :remote-method="remoteMethod"
-            :loading="loading">
-          <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.teacherName+'  '+item.account"
-              :value="item.account">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="助教二" >
-        <el-select
-            v-model="ruleForm.assistantTeacherTwo"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入教师名关键词"
-            :remote-method="remoteMethod"
-            :loading="loading">
-          <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.teacherName+'  '+item.account"
-              :value="item.account">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="班级" prop="classes">
-        <el-select
-            v-model="ruleForm.classes"
-            filterable
-            multiple
-            remote
-            reserve-keyword
-            placeholder="请输入班级关键词"
-            :remote-method="remoteClasses"
-            :loading="loading">
-          <el-option
-              v-for="item in classesOption"
-              :key="item.key"
-              :label="item.className"
-              :value="item.className">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即开设课程</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <div style="margin: 30px auto; text-align: center">
+      <h2>填写授课信息</h2>
+    </div>
+    <el-divider></el-divider>
+    <div style="margin-left: 35%">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="课程编号" >
+          <el-input v-model="ruleForm.courseId" readonly style="width: 35%"></el-input>
+        </el-form-item>
+        <el-form-item label="课程名称">
+          <el-input v-model="ruleForm.courseName" readonly style="width: 35%"></el-input>
+        </el-form-item>
+        <el-form-item label="主教师" prop="mainTeacher">
+          <el-select
+              v-model="ruleForm.mainTeacher"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入教师名关键词"
+              :remote-method="remoteMethod"
+              :loading="loading">
+            <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.teacherName+'  '+item.account"
+                :value="item.account">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="助教一" >
+          <el-select
+              v-model="ruleForm.assistantTeacherOne"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入教师名关键词"
+              :remote-method="remoteMethod"
+              :loading="loading">
+            <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.teacherName+'  '+item.account"
+                :value="item.account">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="助教二" >
+          <el-select
+              v-model="ruleForm.assistantTeacherTwo"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入教师名关键词"
+              :remote-method="remoteMethod"
+              :loading="loading">
+            <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.teacherName+'  '+item.account"
+                :value="item.account">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="班级" prop="classes">
+          <el-select
+              v-model="ruleForm.classes"
+              filterable
+              multiple
+              remote
+              reserve-keyword
+              placeholder="请输入班级关键词"
+              :remote-method="remoteClasses"
+              :loading="loading">
+            <el-option
+                v-for="item in classesOption"
+                :key="item.key"
+                :label="item.className"
+                :value="item.className">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')">立即开设课程</el-button>
+          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 <script>

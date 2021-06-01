@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div style="margin: 0px auto; text-align: center">
+      <h2>我的课程</h2>
+    </div>
+    <el-divider></el-divider>
     <MyCoursesData ref="myCoursesData" :option="this.option"></MyCoursesData>
   </div>
 </template>

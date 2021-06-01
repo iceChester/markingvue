@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div style="margin: 30px auto; text-align: center">
+      <h2>学校课程</h2>
+    </div>
+    <el-divider></el-divider>
     <el-table
         :data="tableData.filter(data => !search || data.courseName.toLowerCase().includes(search.toLowerCase()))"
         :border="true"
@@ -29,7 +33,7 @@
     </el-table>
     <el-pagination
         background
-        style="margin-left: 25%"
+        style="margin-left: 45%"
         layout="prev, pager, next"
         :page-size=pageSize
         :total=total
@@ -100,3 +104,13 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+/deep/.el-table th > .cell {
+  text-align: center;
+}
+
+/deep/.el-table .cell {
+  text-align: center;
+}
+</style>

@@ -1,17 +1,21 @@
 <template>
   <Group ref="group" v-if=this.isGroupShow :groupInfo = this.groupInfo></Group>
-  <div v-else>
-    <h1>你还未有小组，先创建小组吧</h1>
+  <div v-else style="margin-left: 25%">
+    <h1>
+      <span style="margin: 0 20%">你还未有小组，先创建小组吧</span>
+    </h1>
     <el-form :model="groupForm" :rules="rules" ref="groupForm" label-width="100px" class="demo-ruleForm">
       <el-form-item label="组长：" >
-        <el-input v-model="groupForm.leaderName" readonly></el-input>
+        <el-input v-model="groupForm.leaderName" readonly style="width: 50%"></el-input>
       </el-form-item>
       <el-form-item label="小组名称">
-        <el-input v-model="groupForm.groupName" prop="name"></el-input>
+        <el-input v-model="groupForm.groupName" prop="name" style="width: 50%"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('groupForm')">立即创建小组</el-button>
-        <el-button @click="resetForm('groupForm')">重置</el-button>
+        <div style="margin-left: 16%">
+          <el-button type="primary" @click="submitForm('groupForm')">立即创建小组</el-button>
+          <el-button @click="resetForm('groupForm')">重置</el-button>
+        </div>
       </el-form-item>
     </el-form>
   </div>

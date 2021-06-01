@@ -1,138 +1,144 @@
 <template>
-  <div>
-    <div style="margin: 30px auto; text-align: center">
-        <h1>作业详情</h1>
-    </div>
-    <el-divider></el-divider>
-    <el-page-header @back="goBack" content="详情页面"></el-page-header>
-    <el-row :gutter="20" style="margin-top: 30px">
-      <el-col :span="12"><Bar ref="bar" :barData = this.barData :xData = this.xData v-if="isBarShow"></Bar> </el-col>
-      <el-col :span="12"><Pie ref="pie" :pieData = this.pieData v-if="isPieShow"></Pie> </el-col>
-    </el-row>
+  <el-scrollbar
+      wrapClass="scrollbar-wrap"
+      :style="{height: scrollHeight}"
+      ref="scrollbarContainer">
     <div>
-      <el-table
-          :data="tableData"
-          height="280"
-          border
-          style="width: 90% ;margin: 0 auto">
-        <el-table-column fixed label="序号" width="50" align="center">
-          <template scope="scope">
+      <div style="margin: 30px auto; text-align: center">
+        <h1>作业详情</h1>
+      </div>
+      <el-divider></el-divider>
+      <el-page-header @back="goBack" content="详情页面"></el-page-header>
+      <el-row :gutter="20" style="margin-top: 30px">
+        <el-col :span="12"><Bar ref="bar" :barData = this.barData :xData = this.xData v-if="isBarShow"></Bar> </el-col>
+        <el-col :span="12"><Pie ref="pie" :pieData = this.pieData v-if="isPieShow"></Pie> </el-col>
+      </el-row>
+      <div>
+        <el-table
+            :data="tableData"
+            height="640"
+            border
+            style="width: 90% ;margin: 0 auto">
+          <el-table-column fixed label="序号" width="50" align="center">
+            <template scope="scope">
             <span>
               {{scope.$index + 1}}
             </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-            prop="studentId"
-            label="学生序号"
-            width="180"
-            v-if=show>
-        </el-table-column>
-        <el-table-column
-            prop="studentName"
-            label="姓名"
-            width="120">
-        </el-table-column>
-        <el-table-column
-            prop="className"
-            label="班级"
-            width="120">
-        </el-table-column>
-        <el-table-column
-            prop="account"
-            label="学号">
-        </el-table-column>
-        <el-table-column
-            prop="submitDate"
-            label="完成时间">
-        </el-table-column>
-        <el-table-column
-            label="分数">
-          <el-table-column
-              prop="scoreOne"
-              label="主教师评分">
+            </template>
           </el-table-column>
           <el-table-column
-              prop="scoreTwo"
-              label="助教一评分">
+              prop="studentId"
+              label="学生序号"
+              width="180"
+              v-if=show>
           </el-table-column>
           <el-table-column
-              prop="scoreThree"
-              label="助教二评分">
+              prop="studentName"
+              label="姓名"
+              width="120">
           </el-table-column>
           <el-table-column
-              prop="scoreTotal"
-              label="总分">
+              prop="className"
+              label="班级"
+              width="120">
           </el-table-column>
-        </el-table-column>
-        <el-table-column
-            width="160"
-            fixed="right"
-            label="评分"
-            v-if="isMarkingShow">
-          <template slot-scope="scope">
-            <el-tooltip placement="top">
-              <div slot="content">评分权重为：{{markingType.weight}}%<br/>您的权重为：{{markingType.weight[markingType.position-1]}}%</div>
-              <el-input
-                  v-model="scope.row.score"
-                  size="normal"
-                  type="number"
-                  placeholder="输入分数" style="height: 80%;width: 90%"
-                  @change="setScore(scope.row)"
-                  />
-            </el-tooltip>
+          <el-table-column
+              prop="account"
+              label="学号">
+          </el-table-column>
+          <el-table-column
+              prop="submitDate"
+              label="完成时间">
+          </el-table-column>
+          <el-table-column
+              label="分数">
+            <el-table-column
+                prop="scoreOne"
+                label="主教师评分">
+            </el-table-column>
+            <el-table-column
+                prop="scoreTwo"
+                label="助教一评分">
+            </el-table-column>
+            <el-table-column
+                prop="scoreThree"
+                label="助教二评分">
+            </el-table-column>
+            <el-table-column
+                prop="scoreTotal"
+                label="总分">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column
+              width="160"
+              fixed="right"
+              label="评分"
+              v-if="isMarkingShow">
+            <template slot-scope="scope">
+              <el-tooltip placement="top">
+                <div slot="content">评分权重为：{{markingType.weight}}%<br/>您的权重为：{{markingType.weight[markingType.position-1]}}%</div>
+                <el-input
+                    v-model="scope.row.score"
+                    size="normal"
+                    type="number"
+                    placeholder="输入分数" style="height: 80%;width: 90%"
+                    @change="setScore(scope.row)"
+                />
+              </el-tooltip>
 
-<!--            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)" style="margin-left: 10%">确定</el-button>-->
-          </template>
-        </el-table-column>
-        <el-table-column width="240" fixed="right">
-          <template slot="header" slot-scope="scope">
-            <el-button type="primary" @click="toExcel" size="mini"  style="padding-right: 5%;">导出表格</el-button>
-            <el-button type="primary" @click="downloadAllTask" size="mini"  style="padding-right: 5%;">下载所有作业</el-button>
-          </template>
-          <template slot-scope="scope">
-            <el-button size="mini" type="primary"  @click="downloadOne(scope.row)">下载作业</el-button>
-            <el-button size="mini" @click="openDrawer(scope.row)" type="primary" style="margin-left: 16px;">查看</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-          background
-          layout="prev, pager, next"
-          :page-size=pageSize
-          :total=total
-          @current-change="newPage"
-          style="overflow: auto;float: right;padding-right: 5%;padding-top: 20px">
-      </el-pagination>
-    </div>
-    <div>
-      <el-drawer
-          :title="this.studentName"
-          :visible.sync="drawer"
-          :before-close="handleClose"
-          size="50%"
-          style="overflow: auto"
-          >
-        <div style="height: 45%" v-if="isImgShow">
-          <el-carousel :interval="4000" type="card">
-            <el-carousel-item v-for="item in this.imgSrc" :key="item">
-              <el-image :src="item" class="image"/>
-            </el-carousel-item>
-          </el-carousel>
-          <div >
-            <el-button @click="this.showBigImg"  style="margin: 20px 50%">预览</el-button>
-            <el-image-viewer
-                v-if="showViewer"
-                :on-close="()=>{showViewer=false}"
-                :url-list="this.imgSrc" />
+              <!--            <el-button size="mini" type="primary"  @click="updateStudent(scope.row)" style="margin-left: 10%">确定</el-button>-->
+            </template>
+          </el-table-column>
+          <el-table-column width="240" fixed="right">
+            <template slot="header" slot-scope="scope">
+              <el-button type="primary" @click="toExcel" size="mini"  style="padding-right: 5%;">导出表格</el-button>
+              <el-button type="primary" @click="downloadAllTask" size="mini"  style="padding-right: 5%;">下载所有作业</el-button>
+            </template>
+            <template slot-scope="scope">
+              <el-button size="mini" type="primary"  @click="downloadOne(scope.row)">下载作业</el-button>
+              <el-button size="mini" @click="openDrawer(scope.row)" type="primary" style="margin-left: 16px;">查看</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+            background
+            layout="prev, pager, next"
+            :page-size=pageSize
+            :total=total
+            @current-change="newPage"
+            style="overflow: auto;float: right;padding-right: 5%;padding-top: 20px">
+        </el-pagination>
+      </div>
+      <div>
+        <el-drawer
+            :title="this.studentName"
+            :visible.sync="drawer"
+            :before-close="handleClose"
+            size="50%"
+            style="overflow: auto"
+        >
+          <div style="height: 45%" v-if="isImgShow">
+            <el-carousel :interval="4000" type="card">
+              <el-carousel-item v-for="item in this.imgSrc" :key="item">
+                <el-image :src="item" class="image"/>
+              </el-carousel-item>
+            </el-carousel>
+            <div >
+              <el-button @click="this.showBigImg"  style="margin: 20px 50%">预览</el-button>
+              <el-image-viewer
+                  v-if="showViewer"
+                  :on-close="()=>{showViewer=false}"
+                  :url-list="this.imgSrc" />
+            </div>
           </div>
-        </div>
-        <div style="width: 75%;margin: 30px auto;height: 45%" v-show="isVideoShow">
-          <Video ref="video" :videoSrc = "this.videoSrc"></Video>
-        </div>
-      </el-drawer>
+          <div style="width: 75%;margin: 30px auto;height: 45%" v-show="isVideoShow">
+            <Video ref="video" :videoSrc = "this.videoSrc"></Video>
+          </div>
+        </el-drawer>
+      </div>
     </div>
-  </div>
+  </el-scrollbar>
+
 </template>
 
 <script>
@@ -148,6 +154,7 @@ export default {
   },
   data() {
     return {
+      scrollHeight:'0px',
       studentName: '',
       videoSrc: '',
       showViewer: false,
@@ -197,6 +204,7 @@ export default {
 
   },
   mounted(){
+    this.scrollHeight = window.innerHeight + 'px';
     // 在通过mounted调用即可
     this.groupDetail();
     this.getBarData();
@@ -304,21 +312,13 @@ export default {
             data.scoreThree = 0;
           }
         }
-        if(data.scoreOne!==undefined &&
-            data.scoreTwo!==undefined &&
-            data.scoreThree!==undefined){
+        if(data.scoreOne!=undefined && data.scoreTwo!=undefined && data.scoreThree!=undefined){
           if(this.markingType.weight.length === 1){
-            data.scoreTotal = data.scoreOne *
-                parseFloat(this.markingType.weight[0])/100.0;
+            data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0;
           }else if(this.markingType.weight.length === 2){
-            data.scoreTotal = data.scoreOne *
-                parseFloat(this.markingType.weight[0])/100.0 +
-                data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0;
+            data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0 + data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0;
           }else if(this.markingType.weight.length === 3){
-            data.scoreTotal = data.scoreOne *
-                parseFloat(this.markingType.weight[0])/100.0 +
-                data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0 +
-                data.scoreThree * parseFloat(this.markingType.weight[2])/100.0;
+            data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0 + data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0 + data.scoreThree * parseFloat(this.markingType.weight[2])/100.0;
           }
           data.score = 0;
         }
@@ -367,11 +367,7 @@ export default {
       }).then(function (resp) {
          _this.markingType = resp.data;
          console.log(_this.markingType.position)
-        if(_this.markingType.position==4){
-          _this.isMarkingShow = false;
-        }else{
-          _this.isMarkingShow = true;
-        }
+        _this.isMarkingShow = _this.markingType.position !== 4;
       })
     },
     getPieData(){
@@ -498,7 +494,7 @@ export default {
       let imgName = row.imgFile.split(",")
       this.studentName = row.studentName;
       console.log(videoName)
-      if(videoName.length>0&&videoName[0]!=""){
+      if(videoName.length>0&&videoName[0]!==""){
         this.videoSrc = path + videoName[0];
         this.isVideoShow = true;
       }else {
@@ -506,7 +502,7 @@ export default {
       }
       this.imgSrc = [];
       imgName.forEach((item,index) =>{
-        if(item!=""){
+        if(item!==""){
           this.imgSrc.push(path+item);
         }
       })
@@ -523,6 +519,8 @@ export default {
 </script>
 
 <style scoped>
+
+
 /deep/.el-table th > .cell {
   text-align: center;
 }
@@ -550,7 +548,6 @@ export default {
   width: 100%;
   /*z-index: 22000000000000 !important;*/
 }
-/*::v-deep.el-drawer__wrapper {*/
-/*  z-index: 1800 !important;*/
-/*}*/
+
+
 </style>

@@ -39,7 +39,7 @@
 
       <el-table
           :data="tableData"
-          height="580"
+          height="480"
           border
           style="width: 80%;margin-left: 8%"
           @selection-change="handleSelectionChange">
@@ -84,7 +84,7 @@
         custom-class="drawer-course-data"
         :visible.sync="drawer"
         direction = "btt"
-        size="68%"
+        size="58%"
         :before-close="drawerClose">
       <el-row>
         <el-col :span="12">
@@ -93,7 +93,7 @@
               <h2 style="text-align: center;">添加课程目标</h2>
               <el-table
                   :data="ObjectiveData"
-                  height="480"
+                  height="450"
                   border
                   style="width: 80%;margin-left: 8%"
                   @selection-change="handleSelectionChange">
@@ -199,7 +199,7 @@ export default {
       headers: {
         token: this.getToken()
       },
-      pageSize: 10,
+      pageSize: 8,
       total: null,
       objectPageSize: 5,
       objectTotal: null,
@@ -417,7 +417,6 @@ export default {
         document.body.appendChild(elink)
         elink.click()
         URL.revokeObjectURL(elink.href) // 释放URL 对象
-
       })
     },
     handleOpen(data){
@@ -444,7 +443,7 @@ export default {
             type: 'info',
             message: "删除成功"
           });
-          this.$router.go(0);
+          _this.$router.go(0);
         }else {
           _this.$message({
             type: 'warning',
@@ -458,8 +457,7 @@ export default {
     },
     uploadSuccess(response, file, fileList){
       this.fileList = [];
-      console.log(response);
-      if(response.data){
+      if(response){
         this.$message({
           type: 'info',
           message: "导入成功"

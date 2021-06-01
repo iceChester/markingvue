@@ -232,7 +232,7 @@ export default {
             type: 'info',
             message: "删除成功"
           });
-          this.$router.go(0);
+          _this.$router.go(0);
         }else {
           _this.$message({
             type: 'warning',
@@ -246,8 +246,7 @@ export default {
     },
     uploadSuccess(response, file, fileList){
       this.fileList = [];
-      console.log(response);
-      if(response.data){
+      if(response){
         this.$message({
           type: 'info',
           message: "导入成功"

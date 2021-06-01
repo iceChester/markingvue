@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import MyCourses from "@/views/teacher/MyCourses";
 import Index from "@/views/Index";
-import Home from "@/views/Home";
 import Courses from "@/views/teacher/Courses";
 import OfferCourse from "@/views/teacher/OfferCourse";
 import CourseDetail from "@/views/teacher/CourseDetail";
@@ -48,13 +47,8 @@ export const fixedRouter = [
       course: 'null'
     },
     component: Index,
-    children: [
-      {
-        path: "/Home",
-        name: "首页",
-        component: Home
-      }
-    ]
+    redirect: "/MyCourses",
+
   },
 ]
 
@@ -103,7 +97,7 @@ export const permissionRouter  = [
         component: TeacherData
       },
       {
-        path: '/CourseData',
+        path: '/MyCourses',
         name: '课程信息',
         component: CourseData
       },

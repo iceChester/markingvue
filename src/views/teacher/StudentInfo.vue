@@ -1,6 +1,10 @@
 <template>
 <div>
-  <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 15%">移除所选同学</el-button>
+  <div style="margin: 0px auto; text-align: center">
+    <h2>授课学生</h2>
+  </div>
+  <el-divider></el-divider>
+  <el-button size="mini" type="danger"  @click="deleteSelection" style="margin-left: 10%">移除所选同学</el-button>
   <el-table
       :data="tableData"
       height="580"
@@ -52,7 +56,7 @@
       :page-size=pageSize
       :total=total
       @current-change="newPage"
-  style="margin: 20px 42%">
+  style="margin: 20px 46%">
   </el-pagination>
 </div>
 </template>

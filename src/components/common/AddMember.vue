@@ -7,8 +7,10 @@
         v-model="value"
         :data="studentData">
     </el-transfer>
-    <el-button type="primary" @click="add">确认添加</el-button>
-    <el-button type="primary" @click="cancel">取消</el-button>
+    <div style="margin: 20px">
+      <el-button type="primary" @click="add">确认添加</el-button>
+      <el-button type="primary" @click="cancel">取消</el-button>
+    </div>
   </div>
 </template>
 

@@ -204,8 +204,7 @@ export default {
     },
     uploadSuccess(response, file, fileList){
       this.fileList = [];
-      console.log(response);
-      if(response.data){
+      if(response){
         this.$message({
           type: 'info',
           message: "导入成功"

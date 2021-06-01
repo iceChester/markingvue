@@ -36,6 +36,7 @@
           :data="item.studentTaskList"
           height="420"
           border
+          ref="multipleTable"
           >
         <el-table-column fixed label="序号" width="50" align="center">
           <template scope="scope">
@@ -91,7 +92,7 @@
             width="160"
             fixed="right"
             label="单独评分"
-            v-if="isMarkingShow">
+            v-show="isMarkingShow">
           <template slot-scope="scope">
             <el-input
                 v-model="scope.row.score"
@@ -285,50 +286,50 @@ export default {
     setScore(data){
       const testScore = parseInt(data.score);
       if(testScore>=0&&testScore<=100){
-        if(this.markingType.weight.length==1){
-          if(this.markingType.position==1){
+        if(this.markingType.weight.length===1){
+          if(this.markingType.position===1){
             data.scoreOne = testScore;
             data.scoreTwo = 0;
             data.scoreThree = 0;
           }
-        }else if(this.markingType.weight.length==2){
-          if(this.markingType.position==1){
+        }else if(this.markingType.weight.length===2){
+          if(this.markingType.position===1){
             data.scoreOne = testScore;
             data.scoreThree = 0;
-          }else if(this.markingType.position==2){
+          }else if(this.markingType.position===2){
             data.scoreTwo = testScore;
             data.scoreThree = 0;
           }
-          if(this.markingType.weight[0]==0){
+          if(this.markingType.weight[0]===0){
             data.scoreOne = 0;
           }
-          if(this.markingType.weight[1]==0){
+          if(this.markingType.weight[1]===0){
             data.scoreTwo = 0;
           }
-        }else if(this.markingType.weight.length==3){
-          if(this.markingType.position==1){
+        }else if(this.markingType.weight.length===3){
+          if(this.markingType.position===1){
             data.scoreOne = testScore;
-          }else if(this.markingType.position==2){
+          }else if(this.markingType.position===2){
             data.scoreTwo = testScore;
-          }else if(this.markingType.position==3){
+          }else if(this.markingType.position===3){
             data.scoreThree = testScore;
           }
-          if(this.markingType.weight[0]==0){
+          if(this.markingType.weight[0]===0){
             data.scoreOne = 0;
           }
-          if(this.markingType.weight[1]==0){
+          if(this.markingType.weight[1]===0){
             data.scoreTwo = 0;
           }
-          if(this.markingType.weight[2]==0){
+          if(this.markingType.weight[2]===0){
             data.scoreThree = 0;
           }
         }
-        if(data.scoreOne!=undefined&&data.scoreTwo!=undefined&&data.scoreThree!=undefined){
-          if(this.markingType.weight.length ==1){
+        if(data.scoreOne!==undefined&&data.scoreTwo!==undefined&&data.scoreThree!==undefined){
+          if(this.markingType.weight.length ===1){
             data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0;
-          }else if(this.markingType.weight.length ==2){
+          }else if(this.markingType.weight.length ===2){
             data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0+ data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0;
-          }else if(this.markingType.weight.length ==3){
+          }else if(this.markingType.weight.length ===3){
             data.scoreTotal = data.scoreOne * parseFloat(this.markingType.weight[0])/100.0 + data.scoreTwo * parseFloat(this.markingType.weight[1])/100.0 + data.scoreThree * parseFloat(this.markingType.weight[2])/100.0;
           }
           console.log();
@@ -379,7 +380,7 @@ export default {
       }).then(function (resp) {
         _this.markingType = resp.data;
         console.log(_this.markingType.position)
-        if(_this.markingType.position==4){
+        if(_this.markingType.position===4){
           _this.isMarkingShow = false;
         }else{
           _this.isMarkingShow = true;
@@ -399,9 +400,7 @@ export default {
           token: this.getToken(),
         }
       }).then(function (resp) {
-        console.log(resp.data);
         _this.taskData = resp.data;
-
       })
     },
     goBack(){
@@ -429,7 +428,7 @@ export default {
       let videoName = row.videoFile.split(",");
       let imgName = row.imgFile.split(",");
       this.studentName = row.studentName;
-      if(videoName.length>0&&videoName[0]!=""){
+      if(videoName.length>0&&videoName[0]!==""){
         this.videoSrc = path + videoName[0];
         this.isVideoShow = true;
       }else {
@@ -437,7 +436,7 @@ export default {
       }
       this.imgSrc = [];
       imgName.forEach((item,index) =>{
-        if(item!=""){
+        if(item!==""){
           this.imgSrc.push(path+item);
         }
       })
@@ -464,6 +463,7 @@ export default {
 /deep/.el-table .cell {
   text-align: center;
 }
+
 .el-carousel__item h3 {
   color: #475669;
   font-size: 14px;

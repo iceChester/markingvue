@@ -202,7 +202,7 @@ export default {
         params: {
           taskId: data.taskId,
           account: this.$store.getters.getAccount,
-
+          groupId: this.$store.getters.getGroupId,
         },
         crossDomain: true,
         xhrFields: {withCredentials: true},

@@ -48,6 +48,7 @@
       </el-table-column>
     </el-table>
     <el-pagination
+        style="margin: 20px 45%"
         background
         layout="prev, pager, next"
         :page-size=pageSize

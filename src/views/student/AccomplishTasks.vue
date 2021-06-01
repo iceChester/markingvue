@@ -4,7 +4,7 @@
   <div style="margin: 50px auto">
     <el-table
         :data="accomplishTaskData"
-        height="550"
+        height="350"
         border
         style="width: 100%"
         ref="multipleTable"
@@ -192,6 +192,7 @@ export default {
         params: {
           taskId: data.taskId,
           account: this.$store.getters.getAccount,
+          groupId: -1,
         },
         crossDomain: true,
         xhrFields: {withCredentials: true},

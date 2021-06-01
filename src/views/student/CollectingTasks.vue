@@ -43,6 +43,7 @@
       title="提交作业文件"
       :visible.sync="dialogVisible"
       width="30%"
+      style="margin-top: 15%"
       :show-close="false">
     <el-upload
         class="upload-demo"
@@ -147,7 +148,7 @@ export default {
       this.$refs.upload.submit();
       this.newData.append('file', this.file);
       this.newData.append("studentTask", JSON.stringify(this.taskData)) // 这里需要转换一下格式传给后台
-      console.log(this.newData);
+      console.log(this.file);
       axios.post("http://localhost:8181/studentTask/uploadTask/", this.newData,{
         crossDomain: true,
         xhrFields: {withCredentials: true},

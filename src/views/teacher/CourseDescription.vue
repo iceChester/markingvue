@@ -1,7 +1,11 @@
 <template>
   <div>
-    <el-card class="box-card"style="margin-left: 10%;width: 75%">
-      <div style="margin: 5vh auto;border-radius: 20px;border: #83afec 2px solid">
+    <div style="margin: 0px auto; text-align: center">
+      <h2>课程信息</h2>
+    </div>
+    <el-divider></el-divider>
+    <el-card class="box-card"style="margin-left: 22%;width: 55%">
+      <div>
         <el-row :gutter="20" style="margin-top: 30px;margin-left: 10%">
           <el-col :span="9"  style="margin-right: 20%"><div>
             <span>课程名称：{{this.result.courseName}}</span>
@@ -32,8 +36,8 @@
           </div></el-col>
         </el-row>
         <div v-if="isShowCollapse">
-          <h3 style="margin-left: 120px">课程目标:</h3>
-          <el-collapse v-model="activeNames"  style="margin: 30px 10%">
+          <h3 style="margin-left: 20px">课程目标:</h3>
+          <el-collapse v-model="activeNames"  style="margin: 30px">
             <el-collapse-item :title="title+(index+1)" :name="index+1" v-for="(item,index) in this.courseObjectives">
               <h3>{{ item.objectiveContent }}</h3>
             </el-collapse-item>
